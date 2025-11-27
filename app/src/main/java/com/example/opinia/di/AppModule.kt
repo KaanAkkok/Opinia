@@ -1,12 +1,13 @@
 package com.example.opinia.di
 
+import com.example.opinia.data.repository.InstructorRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import jakarta.inject.Singleton
+import javax.inject.Singleton
 
 // VIEWMODELLER İÇİN GEREKLİ OLAN DEPENDENCY INJECTİON'I BURADAN YAP
 @Module
@@ -25,4 +26,9 @@ object AppModule {
         return FirebaseFirestore.getInstance()
     }
 
+    @Provides
+    @Singleton
+    fun provideInstructorRepository(firestore: FirebaseFirestore): InstructorRepository {
+        return InstructorRepository(firestore)
+    }
 }
