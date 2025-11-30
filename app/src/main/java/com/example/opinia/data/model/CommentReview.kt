@@ -4,9 +4,9 @@ import com.google.firebase.firestore.DocumentId
 
 data class CommentReview(
     @DocumentId
-    val commentID: String = "",
-    val courseID: String = "",
-    val studentID: String = "",
+    val commentId: String = "",
+    val courseId: String = "",
+    val studentId: String = "",
     val rating: Int = 0,
     val comment: String = "",
 

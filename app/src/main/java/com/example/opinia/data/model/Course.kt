@@ -4,12 +4,12 @@ import com.google.firebase.firestore.DocumentId
 
 data class Course(
     @DocumentId
-    val courseID: String = "",
+    val courseId: String = "",
     val courseCode: String = "",
     val courseName: String = "",
     val courseDescription: String = "",
-    val facultyID: String = "",
-    val departmentID: String = "",
+    val facultyId: String = "",
+    val departmentId: String = "",
     val akts: Int = 0,
     val credits: Int = 0,
 

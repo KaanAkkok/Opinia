@@ -4,7 +4,7 @@ import com.google.firebase.firestore.DocumentId
 
 data class Instructor(
     @DocumentId
-    val instructorID: String = "",
+    val instructorId: String = "",
     val instructorName: String = "",
     val instructorEmail: String = "",
     val instructorTitle: String = "",

@@ -4,7 +4,7 @@ import com.google.firebase.firestore.DocumentId
 
 data class Student(
     @DocumentId
-    val studentID: String = "", // Firebase authentication id'si ile aynı olacak
+    val studentId: String = "", // Firebase authentication id'si ile aynı olacak
     val studentEmail: String = "",
     val studentName: String = "",
     val studentSurname: String = "",
