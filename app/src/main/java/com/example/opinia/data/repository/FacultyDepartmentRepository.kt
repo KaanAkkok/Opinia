@@ -60,19 +60,6 @@ class FacultyDepartmentRepository @Inject constructor(private val firestore: Fir
         }
     }
 
-    suspend fun getDepartmentsByFaculty(facultyId: String): Result<List<Department>> {
-        return try {
-            val snapshot = firestore.collection(collectionDepartmentName).whereEqualTo("facultyId", facultyId).get().await()
-            val departments = snapshot.toObjects(Department::class.java)
-            val sortedDepartments = departments.sortedBy { it.departmentName }
-            Log.d(TAG, "Departments retrieved successfully")
-            Result.success(sortedDepartments)
-        } catch (e: Exception) {
-            Log.e(TAG, "Error retrieving departments", e)
-            Result.failure(e)
-        }
-    }
-
     suspend fun getAllDepartments(): Result<List<Department>> {
         return try {
             val snapshot = firestore.collection(collectionDepartmentName).get().await()
@@ -85,6 +72,19 @@ class FacultyDepartmentRepository @Inject constructor(private val firestore: Fir
             Result.failure(e)
         }
 
+    }
+
+    suspend fun getDepartmentsByFaculty(facultyId: String): Result<List<Department>> {
+        return try {
+            val snapshot = firestore.collection(collectionDepartmentName).whereEqualTo("facultyId", facultyId).get().await()
+            val departments = snapshot.toObjects(Department::class.java)
+            val sortedDepartments = departments.sortedBy { it.departmentName }
+            Log.d(TAG, "Departments retrieved successfully")
+            Result.success(sortedDepartments)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error retrieving departments", e)
+            Result.failure(e)
+        }
     }
 
 }

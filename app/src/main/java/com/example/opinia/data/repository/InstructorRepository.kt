@@ -44,6 +44,23 @@ class InstructorRepository @Inject constructor(private val firestore: FirebaseFi
         }
     }
 
+    suspend fun getFacultyIdByInstructorId(instructorId: String): Result<String?> {
+        return try {
+            val documentSnapshot = firestore.collection(collectionName).document(instructorId).get().await()
+            if (documentSnapshot.exists()) {
+                val facultyId = documentSnapshot.getString("facultyId")
+                Log.d(TAG, "Faculty ID retrieved successfully")
+                return Result.success(facultyId)
+            } else {
+                Log.d(TAG, "Instructor not found")
+                return Result.success(null)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error retrieving faculty ID", e)
+            Result.failure(e)
+        }
+    }
+
     suspend fun getAllInstructors(): Result<List<Instructor>> {
         return try {
             val snapshot = firestore.collection(collectionName).get().await()
