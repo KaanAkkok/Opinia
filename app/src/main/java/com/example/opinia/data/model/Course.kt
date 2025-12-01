@@ -9,9 +9,10 @@ data class Course(
     val courseName: String = "",
     val courseDescription: String = "",
     val facultyId: String = "",
-    val departmentId: String = "",
     val akts: Int = 0,
     val credits: Int = 0,
+    val searchCode: String = "",
 
+    val departmentIds: List<String> = emptyList(),
     val instructorIds: List<String> = emptyList()
 )

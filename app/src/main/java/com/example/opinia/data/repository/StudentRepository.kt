@@ -12,9 +12,11 @@ class StudentRepository @Inject constructor(private val firestore: FirebaseFires
     private val collectionName = "students"
     private val TAG = "StudentRepository"
 
-    suspend fun createOrUpdateStudent(student: Student): Result<Unit> {
+    //öğrenci yaratır (auth id ile aynı olacak şekilde)
+    suspend fun createStudent(student: Student, studentAuthUid: String): Result<Unit> {
         return try {
-            firestore.collection(collectionName).document(student.studentId).set(student).await()
+            val finalStudent = student.copy(studentId = studentAuthUid)
+            firestore.collection(collectionName).document(finalStudent.studentId).set(student).await()
             Log.d(TAG, "Student created or updated successfully")
             Result.success(Unit)
         } catch (e: Exception) {
@@ -23,6 +25,7 @@ class StudentRepository @Inject constructor(private val firestore: FirebaseFires
         }
     }
 
+    //id ye göre tek öğrenci verir
     suspend fun getStudentById(studentId: String): Result<Student?> {
         return try {
             val documentSnapshot = firestore.collection(collectionName).document(studentId).get().await()
@@ -40,6 +43,7 @@ class StudentRepository @Inject constructor(private val firestore: FirebaseFires
         }
     }
 
+    //öğrenci profil fotoğrafını günceller
     suspend fun updateProfileAvatar(studentId: String, avatarKey: String): Result<Unit> {
         return try {
             firestore.collection(collectionName).document(studentId).update("studentProfileAvatar", avatarKey).await()
@@ -51,6 +55,67 @@ class StudentRepository @Inject constructor(private val firestore: FirebaseFires
         }
     }
 
+    //öğrencinin adını günceller
+    suspend fun updateStudentName(studentId: String, studentName: String): Result<Unit> {
+        return try {
+            firestore.collection(collectionName).document(studentId).update("studentName", studentName).await()
+            Log.d(TAG, "Student name updated successfully")
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error updating student name", e)
+            Result.failure(e)
+        }
+    }
+
+    //öğrencinin soyadını günceller
+    suspend fun updateStudentSurname(studentId: String, studentSurname: String): Result<Unit> {
+        return try {
+            firestore.collection(collectionName).document(studentId).update("studentSurname", studentSurname).await()
+            Log.d(TAG, "Student surname updated successfully")
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error updating student surname", e)
+            Result.failure(e)
+        }
+    }
+
+    //öğrencinin dönemini günceller
+    suspend fun updateStudentYear(studentId: String, studentYear: String): Result<Unit> {
+        return try {
+            firestore.collection(collectionName).document(studentId).update("studentYear", studentYear).await()
+            Log.d(TAG, "Student year updated successfully")
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error updating student year", e)
+            Result.failure(e)
+        }
+    }
+
+    //öğrencinin fakültesini günceller
+    suspend fun updateStudentFaculty(studentId: String, facultyId: String): Result<Unit> {
+        return try {
+            firestore.collection(collectionName).document(studentId).update("facultyID", facultyId).await()
+            Log.d(TAG, "Student faculty updated successfully")
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error updating student faculty", e)
+            Result.failure(e)
+        }
+    }
+
+    //öğrencinin departmanını günceller
+    suspend fun updateStudentDepartment(studentId: String, departmentId: String): Result<Unit> {
+        return try {
+            firestore.collection(collectionName).document(studentId).update("departmentID", departmentId).await()
+            Log.d(TAG, "Student department updated successfully")
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error updating student department", e)
+            Result.failure(e)
+        }
+    }
+
+    //öğrenciyi yeni derse kaydeder
     suspend fun enrollStudentToCourse(studentId: String, courseId: String): Result<Unit> {
         return try {
             firestore.collection(collectionName).document(studentId).update("enrolledCourseIds", FieldValue.arrayUnion(courseId)).await()
@@ -62,6 +127,7 @@ class StudentRepository @Inject constructor(private val firestore: FirebaseFires
         }
     }
 
+    //öğrenciyi dersden çıkarır
     suspend fun dropStudentFromCourse(studentId: String, courseId: String): Result<Unit> {
         return try {
             firestore.collection(collectionName).document(studentId).update("enrolledCourseIds", FieldValue.arrayRemove(courseId)).await()
@@ -73,6 +139,7 @@ class StudentRepository @Inject constructor(private val firestore: FirebaseFires
         }
     }
 
+    //öğrencinin yorumlarını kaydeder
     suspend fun saveCommentReview(studentId: String, commentReviewId: String): Result<Unit> {
         return try {
             firestore.collection(collectionName).document(studentId).update("savedCommentReviewIds", FieldValue.arrayUnion(commentReviewId)).await()
@@ -84,6 +151,7 @@ class StudentRepository @Inject constructor(private val firestore: FirebaseFires
         }
     }
 
+    //öğrencinin kaydettiği yorumları siler
     suspend fun unsaveCommentReview(studentId: String, commentReviewId: String): Result<Unit> {
         return try {
             firestore.collection(collectionName).document(studentId).update("savedCommentReviewIds", FieldValue.arrayRemove(commentReviewId)).await()
@@ -91,6 +159,32 @@ class StudentRepository @Inject constructor(private val firestore: FirebaseFires
             Result.success(Unit)
         } catch (e: Exception) {
             Log.e(TAG, "Error saving comment review", e)
+            Result.failure(e)
+        }
+    }
+
+    //öğrencinin kaydettiği tüm dersleri verir
+    suspend fun getEnrolledCoursesIds(studentId: String): Result<List<String>> {
+        return try {
+            val documentSnapshot = firestore.collection(collectionName).document(studentId).get().await()
+            val enrolledCourseIds = documentSnapshot.get("enrolledCourseIds") as? List<String> ?: emptyList()
+            Log.d(TAG, "Enrolled courses retrieved successfully")
+            Result.success(enrolledCourseIds)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error retrieving enrolled courses", e)
+            Result.failure(e)
+        }
+    }
+
+    //öğrencinin kaydettiği tüm yorumları verir
+    suspend fun getSavedCommentReviewIds(studentId: String): Result<List<String>> {
+        return try {
+            val documentSnapshot = firestore.collection(collectionName).document(studentId).get().await()
+            val savedCommentReviewIds = documentSnapshot.get("savedCommentReviewIds") as? List<String> ?: emptyList()
+            Log.d(TAG, "Saved comment reviews retrieved successfully")
+            Result.success(savedCommentReviewIds)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error retrieving saved comment reviews", e)
             Result.failure(e)
         }
     }
