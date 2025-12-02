@@ -2,26 +2,30 @@ package com.example.opinia.data.repository
 
 import android.util.Log
 import com.example.opinia.data.model.CommentReview
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class CommentReviewRepository @Inject constructor(private val firestore: FirebaseFirestore) {
+class CommentReviewRepository @Inject constructor(private val firestore: FirebaseFirestore, private val auth: FirebaseAuth) {
 
     private val collectionName = "comments_reviews"
     private val TAG = "CommentReviewRepository"
 
+    fun getCurrentUserId(): String? {
+        return auth.currentUser?.uid
+    }
+
     //yorum ve puan oluşturur ve ekler
     suspend fun createCommentReview(commentReview: CommentReview): Result<Unit> {
+        val uid = getCurrentUserId() ?: return Result.failure(Exception("User not logged in"))
         return try {
             val docRef = if (commentReview.commentId.isEmpty()) {
                 firestore.collection(collectionName).document()
             } else {
                 firestore.collection(collectionName).document(commentReview.commentId)
             }
-
-            val finalComment = commentReview.copy(commentId = docRef.id, timestamp = System.currentTimeMillis())
-
+            val finalComment = commentReview.copy(commentId = docRef.id, studentId = uid, timestamp = System.currentTimeMillis())
             docRef.set(finalComment).await()
             Log.d(TAG, "Comment review created successfully")
             Result.success(Unit)
@@ -61,6 +65,7 @@ class CommentReviewRepository @Inject constructor(private val firestore: Firebas
 
     //(gerekli olursa) yorumu siler
     suspend fun deleteComment(commentId: String): Result<Unit> {
+        val uid = getCurrentUserId() ?: return Result.failure(Exception("User not logged in"))
         return try {
             firestore.collection(collectionName).document(commentId).delete().await()
             Result.success(Unit)

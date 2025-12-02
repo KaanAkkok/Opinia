@@ -60,17 +60,15 @@ class AuthRepository @Inject constructor(private val auth: FirebaseAuth, private
         }
     }
 
-    //student uid çekmek için Result<String> döndürülmeli
-    suspend fun signup(email: String, password: String): Result<String> {
+    suspend fun signup(email: String, password: String): Result<Unit> {
         return try {
             if (!networkManager.isInternetAvailable()) {
                 return Result.failure(Exception("No internet connection"))
             }
-            val authResult = auth.createUserWithEmailAndPassword(email, password).await()
-            val userId = authResult.user?.uid ?: throw Exception("User ID not found")
+            auth.createUserWithEmailAndPassword(email, password).await()
             auth.currentUser?.sendEmailVerification()?.await() // doğrulama maili gönderme (gerekli değil ise kaldıralım)
             Log.d(TAG, "Signup successful")
-            return Result.success(userId)
+            return Result.success(Unit)
         } catch (e: Exception) {
             val error = when(e) {
                 is FirebaseAuthUserCollisionException -> "This student email is already registered"
@@ -102,7 +100,7 @@ class AuthRepository @Inject constructor(private val auth: FirebaseAuth, private
         }
     }
 
-    suspend fun logout(): Result<Unit> {
+    fun logout(): Result<Unit> {
         return try {
             auth.signOut()
             Log.d(TAG, "Logout successful")
