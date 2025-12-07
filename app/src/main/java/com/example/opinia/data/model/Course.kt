@@ -7,7 +7,6 @@ data class Course(
     val courseId: String = "",
     val courseCode: String = "",
     val courseName: String = "",
-    val courseDescription: String = "",
     val facultyId: String = "",
     val akts: Int = 0,
     val credits: Int = 0,

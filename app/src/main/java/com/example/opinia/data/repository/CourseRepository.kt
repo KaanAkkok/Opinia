@@ -102,18 +102,6 @@ class CourseRepository @Inject constructor(private val firestore: FirebaseFirest
         }
     }
 
-    //dersin açıklamasını günceller
-    suspend fun updateCourseDescription(courseId: String, courseDescription: String): Result<Unit> {
-        return try {
-            firestore.collection(collectionName).document(courseId).update("courseDescription", courseDescription).await()
-            Log.d(TAG, "Course description updated successfully")
-            Result.success(Unit)
-        } catch (e: Exception) {
-            Log.e(TAG, "Error updating course description", e)
-            Result.failure(e)
-        }
-    }
-
     //dersin akts değerini günceller
     suspend fun updateCourseAkts(courseId: String, akts: Int): Result<Unit> {
         return try {
