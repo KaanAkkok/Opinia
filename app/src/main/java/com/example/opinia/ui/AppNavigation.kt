@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 
+
 //BU YOLLAR UPDATE EDİLEBİLİR
 enum class Destination(val route: String) {
     START("splash"),
