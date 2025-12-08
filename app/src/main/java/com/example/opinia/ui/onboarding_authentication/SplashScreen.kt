@@ -23,6 +23,7 @@ import androidx.navigation.NavController
 import com.example.opinia.R
 import com.example.opinia.ui.Destination
 import com.example.opinia.ui.theme.OpiniaDeepBlue
+import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(navController: NavController, splashViewModel: SplashViewModel) {
@@ -31,6 +32,7 @@ fun SplashScreen(navController: NavController, splashViewModel: SplashViewModel)
     val context = LocalContext.current
 
     LaunchedEffect(uiState) {
+        delay(2000) //2 saniye bekle
         when (val state = uiState) {
             is SplashUiState.GoToDashboard -> {
                 navController.navigate(Destination.DASHBOARD.route) {

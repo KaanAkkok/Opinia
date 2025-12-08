@@ -38,5 +38,11 @@ val Typography = Typography(
         fontFamily = WorkSansFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp
+    ),
+
+    bodySmall = TextStyle(
+        fontFamily = WorkSansFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 8.sp
     )
 )

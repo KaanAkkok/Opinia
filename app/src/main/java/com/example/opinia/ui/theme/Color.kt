@@ -6,6 +6,9 @@ val OpiniaDeepBlue = Color(0xFF0E4A6F) //primary color
 val OpinialightBlue = Color(0xFFD1E1F3) //for boxes and button color
 val OpiniaGreyWhite = Color(0xFFEEF1F4) //dashboard background color
 val OpiniaPurple = Color (0xFFC3C3F4)
+val black = Color(0xFF000000)
+val white = Color(0xFFFFFFFF)
+
 
 val primaryLight = Color(0xFF2B638B)
 val onPrimaryLight = Color(0xFFFFFFFF)
