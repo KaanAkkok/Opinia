@@ -91,7 +91,11 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
                     Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
                 }
                 is LoginUiEvent.LoginSuccess -> {
-                    navController.navigate(Destination.DASHBOARD.route)
+                    navController.navigate(Destination.DASHBOARD.route) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
+                    }
                 }
             }
         }
