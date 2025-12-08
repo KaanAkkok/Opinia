@@ -25,5 +25,4 @@ object AppModule {
         return FirebaseFirestore.getInstance()
     }
 
-    // provideInstructorRepository fonksiyonu buradan silindi.
 }

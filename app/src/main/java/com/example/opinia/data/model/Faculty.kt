@@ -4,6 +4,6 @@ import com.google.firebase.firestore.DocumentId
 
 data class Faculty(
     @DocumentId
-    val facultyID: String = "",
+    val facultyId: String = "",
     val facultyName: String = "",
 )

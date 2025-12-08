@@ -80,4 +80,6 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
     // 3. Coroutines Play Services (for await())
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services")
+    // google icon service
+    implementation("androidx.compose.material:material-icons-extended")
 }
