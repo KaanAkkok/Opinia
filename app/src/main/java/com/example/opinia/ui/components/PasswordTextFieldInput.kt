@@ -42,7 +42,7 @@ fun PasswordTextFieldInput(value: String, onValueChange: (String) -> Unit, modif
         decorationBox = { innerTextField ->
             Row(
                 modifier = modifier
-                    .width(280.dp)
+                    .width(270.dp)
                     .height(30.dp)
                     .background(
                         color = OpinialightBlue,

@@ -30,7 +30,7 @@ fun TextFieldInput(value: String, onValueChange: (String) -> Unit, modifier: Mod
         textStyle = TextStyle(color = Color.Black),
         modifier = Modifier
             .height(30.dp)
-            .width(280.dp),
+            .width(270.dp),
         decorationBox = { innerTextField ->
             TextFieldDefaults.DecorationBox(
                     value = value,

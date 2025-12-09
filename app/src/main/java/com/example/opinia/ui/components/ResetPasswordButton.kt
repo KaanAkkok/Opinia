@@ -19,7 +19,7 @@ fun ResetPasswordButton(onClick: () -> Unit, isButtonEnabled: Boolean = true, mo
         onClick = onClick,
         modifier = Modifier
             .height(40.dp)
-            .width(200.dp),
+            .width(180.dp),
         enabled = isButtonEnabled,
         shape = MaterialTheme.shapes.medium,
         colors = ButtonDefaults.buttonColors(

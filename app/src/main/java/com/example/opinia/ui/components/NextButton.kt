@@ -19,7 +19,7 @@ fun NextButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
         onClick = onClick,
         modifier = Modifier
             .height(40.dp)
-            .width(200.dp),
+            .width(180.dp),
         shape = MaterialTheme.shapes.medium,
         colors = ButtonDefaults.buttonColors(
             containerColor = OpinialightBlue,
