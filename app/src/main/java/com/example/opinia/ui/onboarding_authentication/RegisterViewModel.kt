@@ -162,7 +162,7 @@ class RegisterViewModel @Inject constructor(
 
     // 3. sayfa update fonksiyonu
     // Checkbox
-    fun toggleCourseSelection(course: Course) {
+    fun onCourseSelected(course: Course) {
         _uiState.update { currentState ->
             val updatedList = if (currentState.selectedCourses.contains(course)) {
                 currentState.selectedCourses - course

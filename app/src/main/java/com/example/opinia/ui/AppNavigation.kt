@@ -15,6 +15,7 @@ import com.example.opinia.ui.onboarding_authentication.LoginViewModel
 import com.example.opinia.ui.onboarding_authentication.RegisterViewModel
 import com.example.opinia.ui.onboarding_authentication.SignupStudentAcademicScreen
 import com.example.opinia.ui.onboarding_authentication.SignupStudentAvatarScreen
+import com.example.opinia.ui.onboarding_authentication.SignupStudentCourseScreen
 import com.example.opinia.ui.onboarding_authentication.SignupStudentPersonalScreen
 import com.example.opinia.ui.onboarding_authentication.SplashScreen
 import com.example.opinia.ui.onboarding_authentication.SplashViewModel
@@ -76,6 +77,10 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                 composable(Destination.SIGNUP_ACADEMIC_INFO.route) {
                     val registerViewModel = it.sharedViewModel<RegisterViewModel>(navController)
                     SignupStudentAcademicScreen(navController, registerViewModel)
+                }
+                composable(Destination.SIGNUP_COURSE_INFO.route) {
+                    val registerViewModel = it.sharedViewModel<RegisterViewModel>(navController)
+                    SignupStudentCourseScreen(navController, registerViewModel)
                 }
             }
         }
