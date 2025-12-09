@@ -37,7 +37,6 @@ import com.example.opinia.ui.components.PasswordTextFieldInput
 import com.example.opinia.ui.components.TextFieldInput
 import com.example.opinia.ui.theme.OpiniaDeepBlue
 import com.example.opinia.ui.theme.OpinialightBlue
-import com.example.opinia.ui.theme.white
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -92,7 +91,7 @@ fun SignupStudentPersonalContent(
                 modifier = Modifier
                     .size(64.dp)
                     .clip(CircleShape)
-                    .background(white)
+                    .background(OpinialightBlue)
                     .clickable { onAvatarClick() },
                 contentAlignment = Alignment.Center
             ) {
