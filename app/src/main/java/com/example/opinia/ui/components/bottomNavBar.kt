@@ -59,7 +59,7 @@ fun BottomNavBar(navController: NavController) {
                         imageVector = item.icon,
                         contentDescription = item.name,
                         modifier = Modifier.size(48.dp)
-                    )
+                    ) // google icons home book ribbon 20px renk opinialightblue
                 },
                 selected = isSelected,
                 onClick = {
