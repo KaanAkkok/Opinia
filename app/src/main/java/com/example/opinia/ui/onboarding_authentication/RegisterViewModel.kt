@@ -224,6 +224,10 @@ class RegisterViewModel @Inject constructor(
             sendErrorEvent("Passwords do not match")
             return false
         }
+        if (state.selectedAvatarId.isEmpty()) {
+            sendErrorEvent("Please select an avatar by clicking the icon above")
+            return false
+        }
         return true
     }
 

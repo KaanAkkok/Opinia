@@ -8,7 +8,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.opinia.ui.theme.OpiniaDeepBlue
 import com.example.opinia.ui.theme.OpinialightBlue
@@ -27,7 +26,7 @@ fun SignupButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
             contentColor = OpiniaDeepBlue
         )
     ) {
-        Text("Sign Up", style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold))
+        Text("Sign Up", style = MaterialTheme.typography.titleMedium)
     }
 
 }

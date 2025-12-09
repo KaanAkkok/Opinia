@@ -55,9 +55,9 @@ fun ForgotPasswordScreenContent(
 
         Spacer(modifier = Modifier.height(120.dp))
 
-        Text("Student Email", style = MaterialTheme.typography.bodyMedium, color = OpinialightBlue)
+        Text("Student Email", style = MaterialTheme.typography.titleSmall, color = OpinialightBlue)
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         TextFieldInput(emailValue, onValueChange = onEmailChange)
 
@@ -65,10 +65,10 @@ fun ForgotPasswordScreenContent(
 
         ResetPasswordButton(onClick = onResetPasswordClick, isButtonEnabled)
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         TextButton(onClick = onGoBackToLoginClick) {
-            Text(text = "Back to login", style = MaterialTheme.typography.bodyMedium, color = OpinialightBlue)
+            Text(text = "Back to login", style = MaterialTheme.typography.titleSmall, color = OpinialightBlue)
         }
 
     }

@@ -12,6 +12,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.opinia.R
 import com.example.opinia.ui.Destination
@@ -48,17 +49,17 @@ fun LoginScreenContent(
 
         Spacer(modifier = Modifier.height(120.dp))
 
-        Text("Student Email", style = MaterialTheme.typography.bodyMedium, color = OpinialightBlue)
+        Text("Student Email", style = MaterialTheme.typography.titleSmall, color = OpinialightBlue)
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         TextFieldInput(emailValue, onValueChange = onEmailChange)
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
-        Text("Password", style = MaterialTheme.typography.bodyMedium, color = OpinialightBlue)
+        Text("Password", style = MaterialTheme.typography.titleSmall, color = OpinialightBlue)
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         Column(modifier = Modifier.width(IntrinsicSize.Max)) {
 
@@ -69,7 +70,7 @@ fun LoginScreenContent(
                 modifier = Modifier.align(Alignment.End),
                 contentPadding = PaddingValues(0.dp)
             ) {
-                Text("Forgot My Password", style = MaterialTheme.typography.bodySmall, color = OpinialightBlue)
+                Text("Forgot My Password", style = MaterialTheme.typography.titleSmall.copy(fontSize = 12.sp), color = OpinialightBlue)
             }
         }
 
