@@ -31,10 +31,10 @@ data class RegisterUiState(
     val selectedAvatarId: String = "",
     // sayfa 3 akademik bilgiler
     val availableFaculties: List<Faculty> = emptyList(), // backendden gelecek liste
-    val selectedFaculty: Faculty? = null, // dropdownbox yapısında olacak
+    val selectedFaculty: Faculty? = null,
     val availableDepartments: List<Department> = emptyList(), // backendden gelecek liste
-    val selectedDepartment: Department? = null, // dropdownbox yapısında olacak
-    val selectedStdYear: String = "", // dropdownbox yapısında olacak
+    val selectedDepartment: Department? = null,
+    val selectedStdYear: String = "",
     // sayfa 4 ders seçimi
     val availableCourses: List<Course> = emptyList(), // backendden gelecek liste
     val selectedCourses: List<Course> = emptyList(), // kullanıcının seçtikleri
