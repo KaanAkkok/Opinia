@@ -1,6 +1,12 @@
 package com.example.opinia.ui.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -8,10 +14,14 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.opinia.ui.theme.OpinialightBlue
 import com.example.opinia.ui.theme.black
 
@@ -22,32 +32,46 @@ fun PasswordTextFieldInput(value: String, onValueChange: (String) -> Unit, modif
     // Şifre görünürlük durumu sadece bu bileşeni ilgilendirir
     var showPassword by remember { mutableStateOf(false) }
 
-    TextField(
+    BasicTextField(
         value = value,
         onValueChange = onValueChange,
         singleLine = true,
+        cursorBrush = SolidColor(black),
+        textStyle = TextStyle(color = black, fontSize = 14.sp),
         visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
-        trailingIcon = {
-            val icon = if (showPassword) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
-            val description = if (showPassword) "Hide password" else "Show password"
-
-            IconButton(onClick = { showPassword = !showPassword }) {
-                Icon(imageVector = icon, contentDescription = description, tint = black)
+        decorationBox = { innerTextField ->
+            Row(
+                modifier = modifier
+                    .width(280.dp)
+                    .height(30.dp)
+                    .background(
+                        color = OpinialightBlue,
+                        shape = MaterialTheme.shapes.extraLarge
+                    )
+                    .padding(start = 16.dp, end = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Box(
+                    modifier = Modifier.weight(1f),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    innerTextField()
+                }
+                val icon = if (showPassword) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                IconButton(
+                    onClick = { showPassword = !showPassword },
+                    modifier = Modifier.size(24.dp)
+                ) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = "Toggle password visibility",
+                        tint = black,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
             }
-        },
-        shape = MaterialTheme.shapes.extraLarge,
-        colors = TextFieldDefaults.colors(
-            focusedContainerColor = OpinialightBlue,
-            unfocusedContainerColor = OpinialightBlue,
-            focusedTextColor = black,
-            unfocusedTextColor = black,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent
-        ),
-        modifier = modifier
-            .width(280.dp)
-            .height(50.dp)
+        }
     )
 
 }

@@ -1,40 +1,57 @@
 package com.example.opinia.ui.components
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.opinia.ui.theme.OpinialightBlue
-import com.example.opinia.ui.theme.black
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TextFieldInput(value: String, onValueChange: (String) -> Unit, modifier: Modifier = Modifier) {
 
-    TextField(
+    val interactionSource = remember { MutableInteractionSource() }
+    BasicTextField(
         value = value,
         onValueChange = onValueChange,
         singleLine = true,
-        shape = MaterialTheme.shapes.extraLarge,
-        colors = TextFieldDefaults.colors(
-            focusedContainerColor = OpinialightBlue,
-            unfocusedContainerColor = OpinialightBlue,
-            focusedTextColor = black,
-            unfocusedTextColor = black,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent
-        ),
-        modifier = modifier
-            .width(280.dp)
-            .height(50.dp)
+        interactionSource = interactionSource,
+        textStyle = TextStyle(color = Color.Black),
+        modifier = Modifier
+            .height(30.dp)
+            .width(280.dp),
+        decorationBox = { innerTextField ->
+            TextFieldDefaults.DecorationBox(
+                    value = value,
+                    innerTextField = innerTextField,
+                    enabled = true,
+                    singleLine = true,
+                    shape = MaterialTheme.shapes.large,
+                    visualTransformation = VisualTransformation.None,
+                    interactionSource = interactionSource,
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = OpinialightBlue,
+                        unfocusedContainerColor = OpinialightBlue,
+                        focusedTextColor = Color.Black,
+                        unfocusedTextColor = Color.Black,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent
+                    ),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 0.dp)
+                )
+        }
     )
+
 
 }
