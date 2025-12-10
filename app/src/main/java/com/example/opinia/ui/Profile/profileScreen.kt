@@ -37,7 +37,7 @@ fun ProfileScreen(
             // ViewModel üzerinden çıkış yapılıyor
             viewModel.signOut {
                 // Çıkış tamamlanınca Login ekranına yönlendir ve stack'i temizle
-                navController.navigate(Destination.CHOOSE_LOGIN_OR_SIGNUP) { // Destination.LOGIN.route string'ini buraya yazmalısın
+                navController.navigate(Destination.CHOOSE_LOGIN_OR_SIGNUP.route) { // Destination.LOGIN.route string'ini buraya yazmalısın
                     popUpTo(0) { inclusive = true } // Veya Dashboard'a kadar sil
                 }
             }
