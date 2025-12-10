@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.opinia.R
+import com.example.opinia.ui.Destination
 import com.example.opinia.ui.component.BottomNavBar
 import com.example.opinia.ui.theme.OpiniaDeepBlue
 import com.example.opinia.ui.theme.OpinialightBlue
@@ -36,7 +37,7 @@ fun ProfileScreen(
             // ViewModel üzerinden çıkış yapılıyor
             viewModel.signOut {
                 // Çıkış tamamlanınca Login ekranına yönlendir ve stack'i temizle
-                navController.navigate("login") { // Destination.LOGIN.route string'ini buraya yazmalısın
+                navController.navigate(Destination.CHOOSE_LOGIN_OR_SIGNUP) { // Destination.LOGIN.route string'ini buraya yazmalısın
                     popUpTo(0) { inclusive = true } // Veya Dashboard'a kadar sil
                 }
             }
