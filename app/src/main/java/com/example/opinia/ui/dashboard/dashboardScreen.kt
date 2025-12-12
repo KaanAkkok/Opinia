@@ -32,15 +32,12 @@ import com.example.opinia.data.model.Instructor
 import com.example.opinia.data.model.CommentReview
 import com.example.opinia.ui.Destination
 import com.example.opinia.ui.theme.NunitoFontFamily
+import com.example.opinia.ui.theme.OpiniaPurple
 import com.example.opinia.ui.theme.WorkSansFontFamily
+import com.example.opinia.ui.theme.white
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-
-// Renk Paleti
-val OpiniaLightPurple = Color(0xFFC5CAE9)
-val OpiniaDarkPurple = Color(0xFF9FA8DA)
-val OpiniaBg = Color(0xFFEEF1F4)
 
 @Composable
 fun DashboardScreen(
@@ -52,6 +49,7 @@ fun DashboardScreen(
 
     DashboardContent(
         state = state,
+        navController = navController,
         onSearchQueryChange = { viewModel.onSearchQueryChanged(it) },
         onAvatarClick = { navController.navigate(Destination.STUDENT_PROFILE.route) } // Tıklamayı içeri aktar
     )
@@ -61,12 +59,13 @@ fun DashboardScreen(
 @Composable
 fun DashboardContent(
     state: DashboardUiState,
+    navController: NavController,
     onSearchQueryChange: (String) -> Unit,
     onAvatarClick: () -> Unit // Header'a iletmek için parametre
 ) {
     Scaffold(
-        bottomBar = { BottomNavBar(navController = rememberNavController()) },
-        containerColor = OpiniaBg
+        bottomBar = { BottomNavBar(navController = navController) },
+        containerColor = white
     ) { paddingValues ->
 
         Column(
@@ -224,7 +223,7 @@ fun FeaturedCourseCard(course: Course, comment: CommentReview?, averageRating: D
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(containerColor = OpiniaLightPurple)
+        colors = CardDefaults.cardColors(containerColor = OpiniaPurple)
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
@@ -307,7 +306,7 @@ fun MyCoursesSection(courses: List<Course>) {
             .fillMaxWidth()
             .heightIn(min = 200.dp),
         shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(containerColor = OpiniaLightPurple)
+        colors = CardDefaults.cardColors(containerColor = OpiniaPurple)
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
             Text(
@@ -413,6 +412,7 @@ fun DashboardScreenPreview() {
 
     DashboardContent(
         state = dummyState,
+        navController = rememberNavController(),
         onSearchQueryChange = {},
         onAvatarClick = {} // Preview için boş lambda
     )
