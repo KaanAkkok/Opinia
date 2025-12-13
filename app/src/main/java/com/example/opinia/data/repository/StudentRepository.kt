@@ -170,28 +170,30 @@ class StudentRepository @Inject constructor(private val firestore: FirebaseFires
         }
     }
 
-    //öğrencinin yorumlarını kaydeder
-    suspend fun saveCommentReview(commentReviewId: String): Result<Unit> {
+    // Öğrencinin bir dersi favorilere/kaydedilenlere eklemesi
+    // (Önceki saveCommentReview yerine geldi)
+    suspend fun saveCourse(courseId: String): Result<Unit> {
         val uid = getCurrentUserId() ?: return Result.failure(Exception("User not logged in"))
         return try {
-            firestore.collection(collectionName).document(uid).update("savedCommentReviewIds", FieldValue.arrayUnion(commentReviewId)).await()
-            Log.d(TAG, "Comment review saved successfully")
+            firestore.collection(collectionName).document(uid).update("savedCourseIds", FieldValue.arrayUnion(courseId)).await()
+            Log.d(TAG, "Course saved successfully")
             Result.success(Unit)
         } catch (e: Exception) {
-            Log.e(TAG, "Error saving comment review", e)
+            Log.e(TAG, "Error saving course", e)
             Result.failure(e)
         }
     }
 
-    //öğrencinin kaydettiği yorumları siler
-    suspend fun unsaveCommentReview(commentReviewId: String): Result<Unit> {
+    // Öğrencinin bir dersi favorilerden/kaydedilenlerden çıkarması
+    // (Önceki unsaveCommentReview yerine geldi)
+    suspend fun unsaveCourse(courseId: String): Result<Unit> {
         val uid = getCurrentUserId() ?: return Result.failure(Exception("User not logged in"))
         return try {
-            firestore.collection(collectionName).document(uid).update("savedCommentReviewIds", FieldValue.arrayRemove(commentReviewId)).await()
-            Log.d(TAG, "Comment review unsaved successfully")
+            firestore.collection(collectionName).document(uid).update("savedCourseIds", FieldValue.arrayRemove(courseId)).await()
+            Log.d(TAG, "Course unsaved successfully")
             Result.success(Unit)
         } catch (e: Exception) {
-            Log.e(TAG, "Error saving comment review", e)
+            Log.e(TAG, "Error unsaving course", e)
             Result.failure(e)
         }
     }
@@ -209,16 +211,17 @@ class StudentRepository @Inject constructor(private val firestore: FirebaseFires
         }
     }
 
-    //öğrencinin kaydettiği tüm yorumları verir
-    suspend fun getSavedCommentReviewIds(): Result<List<String>> {
+    // Öğrencinin favorilediği/takip ettiği derslerin ID'lerini getirir
+    // (Önceki getSavedCommentReviewIds yerine geldi)
+    suspend fun getSavedCourseIds(): Result<List<String>> {
         val uid = getCurrentUserId() ?: return Result.failure(Exception("User not logged in"))
         return try {
             val documentSnapshot = firestore.collection(collectionName).document(uid).get().await()
-            val savedCommentReviewIds = documentSnapshot.get("savedCommentReviewIds") as? List<String> ?: emptyList()
-            Log.d(TAG, "Saved comment reviews retrieved successfully")
-            Result.success(savedCommentReviewIds)
+            val savedCourseIds = documentSnapshot.get("savedCourseIds") as? List<String> ?: emptyList()
+            Log.d(TAG, "Saved course IDs retrieved successfully")
+            Result.success(savedCourseIds)
         } catch (e: Exception) {
-            Log.e(TAG, "Error retrieving saved comment reviews", e)
+            Log.e(TAG, "Error retrieving saved course IDs", e)
             Result.failure(e)
         }
     }
