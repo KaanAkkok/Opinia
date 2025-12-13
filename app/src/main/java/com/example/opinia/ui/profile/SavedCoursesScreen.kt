@@ -96,7 +96,7 @@ fun SavedCoursesContent(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
                 contentPadding = PaddingValues(bottom = 8.dp)
             ) { items(savedCourses) { course ->
                 val isSaved = !temporarilyUnsavedIds.contains(course.courseId)

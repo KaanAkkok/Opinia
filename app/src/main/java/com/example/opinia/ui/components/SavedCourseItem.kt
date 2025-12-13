@@ -19,6 +19,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.example.opinia.data.model.Course
 import com.example.opinia.ui.theme.OpiniaDeepBlue
@@ -55,7 +59,20 @@ fun SavedCourseItem(
         Spacer(modifier = Modifier.width(8.dp))
 
         Text(
-            text = "${course.courseCode} - ${course.courseName}",
+            text = buildAnnotatedString {
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append(course.courseCode)
+                }
+                append(" - ")
+                withStyle(
+                    style = SpanStyle(
+                        fontWeight = FontWeight.Normal,
+                        fontSize = MaterialTheme.typography.bodyMedium.fontSize
+                    )
+                ) {
+                    append(course.courseName)
+                }
+            },
             style = MaterialTheme.typography.bodyLarge,
             color = black
         )
