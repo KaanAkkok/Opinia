@@ -37,7 +37,6 @@ import androidx.navigation.NavController
 import com.example.opinia.R
 import com.example.opinia.ui.Destination
 import com.example.opinia.ui.component.BottomNavBar
-import com.example.opinia.ui.components.ChangePasswordButton
 import com.example.opinia.ui.components.CustomButton
 import com.example.opinia.ui.components.PasswordTextFieldInput
 import com.example.opinia.ui.theme.OpiniaDeepBlue
