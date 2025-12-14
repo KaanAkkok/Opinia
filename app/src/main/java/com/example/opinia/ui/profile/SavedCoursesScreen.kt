@@ -9,11 +9,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -26,18 +30,22 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavController
 import com.example.opinia.R
 import com.example.opinia.data.model.Course
 import com.example.opinia.ui.Destination
 import com.example.opinia.ui.component.BottomNavBar
+import com.example.opinia.ui.components.CustomCourseCard
 import com.example.opinia.ui.components.CustomTopAppBar
-import com.example.opinia.ui.components.SavedCourseItem
 import com.example.opinia.ui.components.SearchBar
 import com.example.opinia.ui.theme.OpiniaGreyWhite
+import com.example.opinia.ui.theme.OpiniaPurple
 import com.example.opinia.ui.theme.black
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -98,14 +106,29 @@ fun SavedCoursesContent(
                     .padding(horizontal = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 contentPadding = PaddingValues(bottom = 8.dp)
-            ) { items(savedCourses) { course ->
-                val isSaved = !temporarilyUnsavedIds.contains(course.courseId)
-                SavedCourseItem(
-                    course = course,
-                    onItemClick = onCourseClick,
-                    isSaved = isSaved,
-                    onUnsaveClick = onUnsaveClick
-                )
+            ) { items(
+                items = savedCourses,
+                key = { it.courseId }
+            ) { course ->
+                    val isSaved = !temporarilyUnsavedIds.contains(course.courseId)
+                    CustomCourseCard(
+                        course = course,
+                        isActive = isSaved,
+                        onRowClick = { onCourseClick(course.courseId) },
+                        onIconClick = { onUnsaveClick(course.courseId) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 8.dp, end = 10.dp)
+                            .height(45.dp),
+                        backgroundColor = OpiniaPurple,
+                        innerPadding = PaddingValues(0.dp),
+                        activeIcon = Icons.Filled.Bookmark,
+                        inactiveIcon = Icons.Filled.BookmarkBorder,
+                        iconSize = 24.dp,
+                        iconStartPadding = 12.dp,
+                        codeStyle = SpanStyle(fontWeight = FontWeight.Bold),
+                        nameStyle = SpanStyle(fontWeight = FontWeight.Normal, fontSize = 14.sp)
+                    )
                 }
             }
         }

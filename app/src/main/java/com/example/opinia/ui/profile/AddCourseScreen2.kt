@@ -8,10 +8,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckBox
+import androidx.compose.material.icons.filled.CheckBoxOutlineBlank
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -22,19 +27,24 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavController
 import com.example.opinia.R
 import com.example.opinia.data.model.Course
 import com.example.opinia.ui.Destination
 import com.example.opinia.ui.component.BottomNavBar
-import com.example.opinia.ui.components.AddCourseItem
+import com.example.opinia.ui.components.CustomCourseCard
 import com.example.opinia.ui.components.CustomTopAppBar
 import com.example.opinia.ui.components.SearchBar
 import com.example.opinia.ui.theme.OpiniaGreyWhite
+import com.example.opinia.ui.theme.OpiniaPurple
 import com.example.opinia.ui.theme.black
+import com.example.opinia.ui.theme.gray
 
 @Composable
 fun AddCourse2Content(
@@ -95,31 +105,41 @@ fun AddCourse2Content(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 contentPadding = PaddingValues(bottom = 8.dp)
             ) {
-                items(courses.size) { index ->
-                    val course = courses[index]
+                items(
+                    items = courses,
+                    key = { course -> course.courseId }
+                ) { course ->
                     val isAdded = enrolledCourseIds.contains(course.courseId)
-
-                    AddCourseItem(
+                    CustomCourseCard(
                         course = course,
-                        isAdded = isAdded,
-                        onToggleClick = {
-                            onCourseToggle(course, isAdded)
-                        }
+                        isActive = isAdded,
+                        onRowClick = { onCourseToggle(course, isAdded) },
+                        onIconClick = null,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 8.dp, end = 10.dp)
+                            .height(45.dp),
+                        backgroundColor = OpiniaPurple,
+                        innerPadding = PaddingValues(0.dp),
+                        activeIcon = Icons.Filled.CheckBox,
+                        inactiveIcon = Icons.Filled.CheckBoxOutlineBlank,
+                        iconSize = 24.dp,
+                        iconStartPadding = 12.dp,
+                        codeStyle = SpanStyle(fontWeight = FontWeight.Bold),
+                        nameStyle = SpanStyle(fontWeight = FontWeight.Normal, fontSize = 14.sp)
                     )
                 }
-
                 if (courses.isEmpty()) {
                     item {
                         Text(
                             text = "No courses found.",
                             modifier = Modifier.padding(16.dp),
-                            color = androidx.compose.ui.graphics.Color.Gray
+                            color = gray
                         )
                     }
                 }
             }
         }
-
     }
 }
 

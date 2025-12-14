@@ -13,6 +13,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckBox
+import androidx.compose.material.icons.filled.CheckBoxOutlineBlank
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,12 +28,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.opinia.R
 import com.example.opinia.data.model.Course
 import com.example.opinia.ui.Destination
-import com.example.opinia.ui.components.CourseSelectionCard
 import com.example.opinia.ui.components.CustomButton
+import com.example.opinia.ui.components.CustomCourseCard
 import com.example.opinia.ui.theme.OpiniaDeepBlue
 import com.example.opinia.ui.theme.OpinialightBlue
 import kotlinx.coroutines.flow.collectLatest
@@ -74,10 +78,20 @@ fun SignupStudentCourseContent(
         ) {
             items(courses) { course ->
                 val isSelected = selectedCourses.contains(course)
-                CourseSelectionCard(
+                CustomCourseCard(
                     course = course,
-                    isSelected = isSelected,
-                    onClick = { onCourseSelected(course) }
+                    isActive = isSelected,
+                    onRowClick = { onCourseSelected(course) },
+                    onIconClick = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                    backgroundColor = OpinialightBlue,
+                    activeIcon = Icons.Default.CheckBox,
+                    inactiveIcon = Icons.Default.CheckBoxOutlineBlank,
+                    iconSize = 20.dp,
+                    codeStyle = MaterialTheme.typography.titleSmall.toSpanStyle(),
+                    nameStyle = MaterialTheme.typography.titleSmall.copy(fontSize = 13.sp).toSpanStyle()
                 )
             }
         }
