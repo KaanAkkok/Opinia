@@ -21,6 +21,9 @@ import com.example.opinia.ui.onboarding_authentication.SignupStudentCourseScreen
 import com.example.opinia.ui.onboarding_authentication.SignupStudentPersonalScreen
 import com.example.opinia.ui.onboarding_authentication.SplashScreen
 import com.example.opinia.ui.onboarding_authentication.SplashViewModel
+import com.example.opinia.ui.profile.AddCourse1Screen
+import com.example.opinia.ui.profile.AddCourse2Screen
+import com.example.opinia.ui.profile.AddCourseViewModel
 import com.example.opinia.ui.profile.ProfileScreen
 import com.example.opinia.ui.profile.ProfileViewModel
 import com.example.opinia.ui.profile.SavedCoursesScreen
@@ -44,10 +47,10 @@ enum class Destination(val route: String) {
     COURSE_DETAIL("course_detail"),
     INSTRUCTOR_CATALOG("instructor_catalog"),
     STUDENT_SAVED_COURSES("student_saved_courses"),
-    STUDENT_ADD_COURSES("student_add_courses"),
     STUDENT_EDIT_PROFILE("student_edit_profile"),
     STUDENT_CHANGE_PASSWORD("student_change_password"),
-    SUPPORT("support")
+    SUPPORT("support"),
+    ADD_COURSE1("add_course1")
 }
 
 @Composable
@@ -108,6 +111,12 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                 val savedCoursesViewModel: SavedCoursesViewModel = hiltViewModel()
                 SavedCoursesScreen(navController, savedCoursesViewModel)
             }
+
+            composable(Destination.ADD_COURSE1.route) {
+                val addCourseViewModel: AddCourseViewModel = hiltViewModel()
+                AddCourse1Screen(navController, addCourseViewModel)
+            }
+
 
         }
     )
