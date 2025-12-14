@@ -16,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -27,7 +28,15 @@ import com.example.opinia.ui.theme.black
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PasswordTextFieldInput(value: String, onValueChange: (String) -> Unit, modifier: Modifier = Modifier) {
+fun PasswordTextFieldInput(
+    value: String,
+    onValueChange: (String) -> Unit,
+    backgroundColor: Color = OpinialightBlue,
+    textColor: Color = black,
+    iconColor: Color = black,
+    cursorColor: Color = black,
+    modifier: Modifier = Modifier
+) {
 
     // Şifre görünürlük durumu sadece bu bileşeni ilgilendirir
     var showPassword by remember { mutableStateOf(false) }
@@ -36,8 +45,8 @@ fun PasswordTextFieldInput(value: String, onValueChange: (String) -> Unit, modif
         value = value,
         onValueChange = onValueChange,
         singleLine = true,
-        cursorBrush = SolidColor(black),
-        textStyle = TextStyle(color = black, fontSize = 14.sp),
+        cursorBrush = SolidColor(cursorColor),
+        textStyle = TextStyle(color = textColor, fontSize = 14.sp),
         visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
         decorationBox = { innerTextField ->
             Row(
@@ -45,7 +54,7 @@ fun PasswordTextFieldInput(value: String, onValueChange: (String) -> Unit, modif
                     .width(270.dp)
                     .height(30.dp)
                     .background(
-                        color = OpinialightBlue,
+                        color = backgroundColor,
                         shape = MaterialTheme.shapes.extraLarge
                     )
                     .padding(start = 16.dp, end = 8.dp),
@@ -66,7 +75,7 @@ fun PasswordTextFieldInput(value: String, onValueChange: (String) -> Unit, modif
                     Icon(
                         imageVector = icon,
                         contentDescription = "Toggle password visibility",
-                        tint = black,
+                        tint = iconColor,
                         modifier = Modifier.size(24.dp)
                     )
                 }

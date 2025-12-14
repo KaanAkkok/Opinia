@@ -33,6 +33,8 @@ import com.example.opinia.ui.profile.SavedCoursesViewModel
 import com.example.opinia.utils.sharedViewModel
 import com.example.opinia.ui.instructor.InstructorCatalogScreen
 import com.example.opinia.ui.instructor.InstructorListScreen
+import com.example.opinia.ui.profile.ChangePasswordScreen
+import com.example.opinia.ui.profile.ChangePasswordViewModel
 
 
 //BU YOLLAR UPDATE EDİLEBİLİR
@@ -121,17 +123,24 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                 val addCourseViewModel: AddCourseViewModel = hiltViewModel()
                 AddCourse1Screen(navController, addCourseViewModel)
             }
+
             composable(Destination.INSTRUCTOR_CATALOG.route) {
-            InstructorCatalogScreen(navController)
+                InstructorCatalogScreen(navController)
             }
+
             composable(Destination.INSTRUCTOR_LIST.route) { backStackEntry ->
-            val departmentId = backStackEntry.arguments?.getString("departmentName") ?: ""
-            InstructorListScreen(navController, departmentId)
-        }
+                val departmentId = backStackEntry.arguments?.getString("departmentName") ?: ""
+                InstructorListScreen(navController, departmentId)
+            }
 
             composable(Destination.STUDENT_CHANGE_AVATAR.route) {
                 val changeAvatarViewModel: ChangeAvatarViewModel = hiltViewModel()
                 ChangeAvatarScreen(navController, changeAvatarViewModel)
+            }
+
+            composable(Destination.STUDENT_CHANGE_PASSWORD.route) {
+                val changePasswordViewModel: ChangePasswordViewModel = hiltViewModel()
+                ChangePasswordScreen(navController, changePasswordViewModel)
             }
 
         }
