@@ -74,7 +74,7 @@ class AuthRepository @Inject constructor(private val auth: FirebaseAuth, private
             val error = when(e) {
                 is FirebaseAuthUserCollisionException -> "This student email is already registered"
                 is FirebaseAuthInvalidCredentialsException -> "Invalid email format"
-                is FirebaseAuthWeakPasswordException -> "Password should be at least 6 characters"
+                is FirebaseAuthWeakPasswordException -> "Password should be at least 8 characters"
                 else -> "Unkown error"
             }
             Log.e(TAG, "Signup failed with error: $error")
@@ -115,7 +115,7 @@ class AuthRepository @Inject constructor(private val auth: FirebaseAuth, private
         } catch (e: Exception) {
             val error = when(e) {
                 is FirebaseAuthInvalidCredentialsException -> "Invalid current password"
-                is FirebaseAuthWeakPasswordException -> "New password should be at least 6 characters"
+                is FirebaseAuthWeakPasswordException -> "New password should be at least 8 characters"
                 else -> "Unkown error"
             }
             Log.e(TAG, "Password update failed: $error")
