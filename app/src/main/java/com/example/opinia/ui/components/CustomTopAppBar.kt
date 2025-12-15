@@ -32,12 +32,13 @@ import com.example.opinia.ui.theme.black
 fun CustomTopAppBar(
     avatarResId: Int,
     onAvatarClick: () -> Unit,
-    text: String
+    text: String,
+    modifier: Modifier = Modifier
 ) {
     TopAppBar(
         title = {
             Row(
-                modifier = Modifier
+                modifier = modifier
                     .background(OpiniaGreyWhite)
                     .fillMaxWidth()
                     .padding(end = 16.dp),
@@ -48,9 +49,9 @@ fun CustomTopAppBar(
                     Image(
                         painter = painterResource(id = R.drawable.lacivert_amblem),
                         contentDescription = "Logo",
-                        modifier = Modifier.size(50.dp)
+                        modifier = modifier.size(50.dp)
                     )
-                    Spacer(modifier = Modifier.width(12.dp))
+                    Spacer(modifier = modifier.width(6.dp))
                     Text(text, style = MaterialTheme.typography.titleMedium, color = black)
                 }
 
@@ -58,8 +59,8 @@ fun CustomTopAppBar(
                 Image(
                     painter = painterResource(id = avatarResId),
                     contentDescription = "Profile Avatar",
-                    modifier = Modifier
-                        .size(50.dp)
+                    modifier = modifier
+                        .size(60.dp)
                         .clip(CircleShape)
                         .background(Color.LightGray)
                         .clickable { onAvatarClick() }
@@ -70,7 +71,7 @@ fun CustomTopAppBar(
             containerColor = OpiniaGreyWhite,
             scrolledContainerColor = OpiniaGreyWhite
         ),
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(top = 36.dp)
     )

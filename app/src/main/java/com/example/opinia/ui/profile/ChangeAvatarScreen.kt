@@ -83,6 +83,7 @@ fun ChangeAvatarContent(
         Column(
             modifier = Modifier
                 .padding(innerPadding)
+                .padding(horizontal = 12.dp)
                 .fillMaxSize()
                 .background(OpiniaGreyWhite),
             horizontalAlignment = Alignment.CenterHorizontally,

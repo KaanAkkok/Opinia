@@ -88,6 +88,7 @@ fun ChangePasswordContent(
         Column(
             modifier = Modifier
                 .padding(innerPadding)
+                .padding(horizontal = 12.dp)
                 .fillMaxSize()
                 .background(OpiniaGreyWhite)
                 .verticalScroll(scrollState),
