@@ -35,6 +35,8 @@ import com.example.opinia.ui.instructor.InstructorCatalogScreen
 import com.example.opinia.ui.instructor.InstructorListScreen
 import com.example.opinia.ui.profile.ChangePasswordScreen
 import com.example.opinia.ui.profile.ChangePasswordViewModel
+import com.example.opinia.ui.profile.SupportScreen
+import com.example.opinia.ui.profile.SupportViewModel
 
 
 //BU YOLLAR UPDATE EDİLEBİLİR
@@ -132,6 +134,11 @@ fun AppNavigation(modifier: Modifier = Modifier) {
             composable(Destination.STUDENT_CHANGE_PASSWORD.route) {
                 val changePasswordViewModel: ChangePasswordViewModel = hiltViewModel()
                 ChangePasswordScreen(navController, changePasswordViewModel)
+            }
+
+            composable(Destination.SUPPORT.route) {
+                val supportViewModel: SupportViewModel = hiltViewModel()
+                SupportScreen(navController, supportViewModel)
             }
 
             composable(Destination.INSTRUCTOR_CATALOG.route) {
