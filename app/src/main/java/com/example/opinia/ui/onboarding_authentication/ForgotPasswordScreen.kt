@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -41,7 +42,8 @@ fun ForgotPasswordScreenContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(OpiniaDeepBlue),
+            .background(OpiniaDeepBlue)
+            .padding(horizontal = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -73,7 +75,7 @@ fun ForgotPasswordScreenContent(
             contentColor = OpiniaDeepBlue,
             modifier = Modifier
                 .height(40.dp)
-                .width(180.dp)
+                .width(185.dp)
         )
 
         Spacer(modifier = Modifier.height(12.dp))

@@ -50,7 +50,8 @@ fun SignupStudentCourseContent(
         modifier = Modifier
             .fillMaxSize()
             .background(OpiniaDeepBlue)
-            .padding(bottom = 32.dp),
+            .padding(bottom = 32.dp)
+            .padding(horizontal = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {

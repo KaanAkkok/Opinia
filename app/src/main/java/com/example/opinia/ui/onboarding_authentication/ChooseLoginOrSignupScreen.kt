@@ -41,6 +41,7 @@ fun ChooseLoginOrSignupContent(
         modifier = Modifier
             .fillMaxSize()
             .background(OpiniaDeepBlue)
+            .padding(horizontal = 12.dp)
     ) {
 
         Image(
