@@ -170,7 +170,7 @@ fun ProfileContent(
                 CustomButton(
                     onClick = { /* TODO: Handle Turkish language selection */ },
                     text = "TR",
-                    shape = MaterialTheme.shapes.large,
+                    shape = MaterialTheme.shapes.medium,
                     textStyle = MaterialTheme.typography.titleSmall,
                     containerColor = OpiniaDeepBlue,
                     contentColor = OpinialightBlue,
@@ -188,7 +188,7 @@ fun ProfileContent(
                 CustomButton(
                     onClick = { /* TODO: Handle English language selection */ },
                     text = "ENG",
-                    shape = MaterialTheme.shapes.large,
+                    shape = MaterialTheme.shapes.medium,
                     textStyle = MaterialTheme.typography.titleSmall,
                     containerColor = OpiniaDeepBlue,
                     contentColor = OpinialightBlue,
