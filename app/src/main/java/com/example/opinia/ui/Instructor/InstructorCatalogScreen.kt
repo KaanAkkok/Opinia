@@ -48,6 +48,14 @@ fun InstructorCatalogScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var searchText by remember { mutableStateOf("") }
+    val view = androidx.compose.ui.platform.LocalView.current
+    if (!view.isInEditMode) {
+        SideEffect {
+            val window = (view.context as android.app.Activity).window
+            // true = siyah ikonlar (açık renk arka plan için)
+            androidx.core.view.WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = true
+        }
+    }
 
     InstructorCatalogContent(
         uiState = uiState,
