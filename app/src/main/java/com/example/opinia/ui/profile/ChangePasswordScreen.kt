@@ -96,11 +96,11 @@ fun ChangePasswordContent(
         ) {
             Spacer(modifier = Modifier.height(48.dp))
 
-            Text("Change Password", style = MaterialTheme.typography.titleLarge, color = OpiniaDeepBlue)
+            Text("Change Password", style = MaterialTheme.typography.titleMedium, color = OpiniaDeepBlue)
 
             Spacer(modifier = Modifier.height(36.dp))
 
-            Text("Old Password", style = MaterialTheme.typography.titleMedium, color = OpiniaDeepBlue)
+            Text("Old Password", style = MaterialTheme.typography.titleSmall, color = OpiniaDeepBlue)
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -115,7 +115,7 @@ fun ChangePasswordContent(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            Text("New Password", style = MaterialTheme.typography.titleMedium, color = OpiniaDeepBlue)
+            Text("New Password", style = MaterialTheme.typography.titleSmall, color = OpiniaDeepBlue)
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -130,7 +130,7 @@ fun ChangePasswordContent(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            Text("Confirm Password", style = MaterialTheme.typography.titleMedium, color = OpiniaDeepBlue)
+            Text("Confirm Password", style = MaterialTheme.typography.titleSmall, color = OpiniaDeepBlue)
 
             Spacer(modifier = Modifier.height(12.dp))
 
