@@ -19,6 +19,15 @@ class CommentReviewRepository @Inject constructor(private val firestore: Firebas
     //yorum ve puan oluşturur ve ekler
     suspend fun createCommentReview(commentReview: CommentReview): Result<Unit> {
         val uid = getCurrentUserId() ?: return Result.failure(Exception("User not logged in"))
+        val existingReviewQuery = firestore.collection(collectionName)
+            .whereEqualTo("studentId", uid)
+            .whereEqualTo("courseId", commentReview.courseId)
+            .limit(1)
+            .get()
+            .await()
+        if (!existingReviewQuery.isEmpty) {
+            return Result.failure(Exception("User has already reviewed this course"))
+        }
         return try {
             firestore.runTransaction { transaction ->
                 val newCommentRef = firestore.collection(collectionName).document()
