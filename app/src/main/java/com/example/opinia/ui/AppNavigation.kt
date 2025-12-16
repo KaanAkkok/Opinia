@@ -3,10 +3,14 @@ package com.example.opinia.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.opinia.ui.comment_review.CommentReviewScreen
+import com.example.opinia.ui.comment_review.CommentReviewViewModel
 import com.example.opinia.ui.dashboard.DashboardScreen
 import com.example.opinia.ui.dashboard.DashboardViewModel
 import com.example.opinia.ui.onboarding_authentication.ChooseLoginOrSignupScreen
@@ -60,6 +64,8 @@ enum class Destination(val route: String) {
     STUDENT_CHANGE_PASSWORD("student_change_password"),
     STUDENT_ADD_COURSE1("student_add_course1"),
     SUPPORT("support"),
+
+    COMMENT_REVIEW("comment_review/{courseId}")
 }
 
 @Composable
@@ -148,6 +154,19 @@ fun AppNavigation(modifier: Modifier = Modifier) {
             composable(Destination.INSTRUCTOR_LIST.route) { backStackEntry ->
                 val departmentId = backStackEntry.arguments?.getString("departmentName") ?: ""
                 InstructorListScreen(navController, departmentId)
+            }
+
+            //yorum ekranına courseId vermeniz gerekiyor
+            composable(
+                route = Destination.COMMENT_REVIEW.route,
+                arguments = listOf(
+                    navArgument("courseId") {
+                        type = NavType.StringType
+                    }
+                )
+            ) {
+                val commentReviewViewModel: CommentReviewViewModel = hiltViewModel()
+                CommentReviewScreen(navController, commentReviewViewModel)
             }
         }
     )
