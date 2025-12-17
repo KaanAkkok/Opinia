@@ -86,9 +86,37 @@ class CommentReviewRepository @Inject constructor(private val firestore: Firebas
     suspend fun deleteComment(commentId: String): Result<Unit> {
         val uid = getCurrentUserId() ?: return Result.failure(Exception("User not logged in"))
         return try {
-            firestore.collection(collectionName).document(commentId).delete().await()
+            firestore.runTransaction { transaction ->
+                val commentRef = firestore.collection(collectionName).document(commentId)
+                val commentSnapshot = transaction.get(commentRef)
+                if (!commentSnapshot.exists()) {
+                    throw Exception("Comment not found")
+                }
+                val comment = commentSnapshot.toObject(CommentReview::class.java)
+                    ?: throw Exception("Failed to parse comment")
+                if (comment.studentId != uid) {
+                    throw Exception("User is not the author of the comment")
+                }
+                val courseRef = firestore.collection("courses").document(comment.courseId)
+                val courseSnapshot = transaction.get(courseRef)
+                if (courseSnapshot.exists()) {
+                    val ratingToDelete = comment.rating.toDouble()
+                    val currentAverage = courseSnapshot.getDouble("averageRating") ?: 0.0
+                    val currentTotal = courseSnapshot.getLong("totalReviews") ?: 0
+                    val newTotal = if (currentTotal > 0) currentTotal - 1 else 0
+                    val newAverage = if (newTotal > 0) {
+                        ((currentAverage * currentTotal) - ratingToDelete) / newTotal
+                    } else {
+                        0.0
+                    }
+                    transaction.update(courseRef, "averageRating", newAverage)
+                    transaction.update(courseRef, "totalReviews", newTotal)
+                }
+                transaction.delete(commentRef)
+            }.await()
             Result.success(Unit)
         } catch (e: Exception) {
+            Log.e(TAG, "Error deleting comment", e)
             Result.failure(e)
         }
     }
