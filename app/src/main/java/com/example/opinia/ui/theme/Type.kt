@@ -21,6 +21,7 @@ val WorkSansFontFamily = FontFamily(
     Font(R.font.worksans_variablefont_wght, FontWeight.Normal),
     Font(R.font.worksans_variablefont_wght, FontWeight.Medium),
     Font(R.font.worksans_bold, FontWeight.Bold),
+    Font(R.font.worksans_semibold, FontWeight.SemiBold),
     Font(R.font.worksans_medium, FontWeight.Medium),
     Font(R.font.worksans_regular, FontWeight.Normal)
 )
