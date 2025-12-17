@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class CommentReviewRepository @Inject constructor(private val firestore: FirebaseFirestore, private val auth: FirebaseAuth) {
 
-    private val collectionName = "comments_reviews"
+    private val collectionName = "comments_review"
     private val TAG = "CommentReviewRepository"
 
     fun getCurrentUserId(): String? {

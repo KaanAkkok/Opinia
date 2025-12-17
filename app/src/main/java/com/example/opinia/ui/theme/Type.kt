@@ -12,13 +12,17 @@ import com.example.opinia.R
 val NunitoFontFamily = FontFamily(
     Font(R.font.nunito_variablefont_wght, FontWeight.Normal),
     Font(R.font.nunito_variablefont_wght, FontWeight.Medium),
-    Font(R.font.nunito_bold, FontWeight.Bold)
+    Font(R.font.nunito_bold, FontWeight.Bold),
+    Font(R.font.nunito_semibold, FontWeight.SemiBold),
+    Font(R.font.nunito_regular, FontWeight.Normal)
 )
 
 val WorkSansFontFamily = FontFamily(
     Font(R.font.worksans_variablefont_wght, FontWeight.Normal),
     Font(R.font.worksans_variablefont_wght, FontWeight.Medium),
-    Font(R.font.worksans_bold, FontWeight.Bold)
+    Font(R.font.worksans_bold, FontWeight.Bold),
+    Font(R.font.worksans_medium, FontWeight.Medium),
+    Font(R.font.worksans_regular, FontWeight.Normal)
 )
 
 val Typography = Typography(
