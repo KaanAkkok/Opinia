@@ -15,6 +15,7 @@ data class CommentReview(
 
     val timestamp: Long = System.currentTimeMillis() // yeni yazılan yorumu üstte göstermek için
 ) {
+    //firebase kaydedilmez. Timestamp'ı formatlıyoruz
     val formattedDate: String
         get() {
             val date = Date(timestamp)
