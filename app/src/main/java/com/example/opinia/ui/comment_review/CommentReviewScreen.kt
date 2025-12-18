@@ -37,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -44,18 +45,21 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import com.example.opinia.R
 import com.example.opinia.ui.Destination
 import com.example.opinia.ui.component.BottomNavBar
 import com.example.opinia.ui.components.CustomCommentField
 import com.example.opinia.ui.components.CustomTopAppBar
+import com.example.opinia.ui.search.GeneralSearchBar
+import com.example.opinia.ui.search.SearchViewModel
 import com.example.opinia.ui.theme.NunitoFontFamily
 import com.example.opinia.ui.theme.OpiniaDeepBlue
 import com.example.opinia.ui.theme.OpiniaGreyWhite
 import com.example.opinia.ui.theme.OpiniaPurple
+import com.example.opinia.ui.theme.OpinialightBlue
 import com.example.opinia.ui.theme.black
-import com.example.opinia.ui.theme.gray
 
 @Composable
 fun CommentReviewContent(
@@ -72,17 +76,49 @@ fun CommentReviewContent(
     onCommentChange: (String) -> Unit,
     onSubmitComment: () -> Unit,
     isInputValid: Boolean = false,
-    isLoading: Boolean = false
+    isLoading: Boolean = false,
+    searchViewModel: SearchViewModel? = null
 ) {
+    val isPreview = LocalInspectionMode.current
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = OpiniaGreyWhite,
         topBar = {
-            CustomTopAppBar(
-                avatarResId = avatarResId,
-                onAvatarClick = onAvatarClick,
-                text = "Course Comment"
-            )
+            Column(modifier = Modifier.fillMaxWidth()) {
+                CustomTopAppBar(
+                    avatarResId = avatarResId,
+                    onAvatarClick = onAvatarClick,
+                    text = "Course Comment",
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                if (!isPreview && searchViewModel != null) {
+                    Box(modifier = Modifier.fillMaxWidth().zIndex(10f)) {
+                        GeneralSearchBar(
+                            searchViewModel = searchViewModel,
+                            onNavigateToCourse = { courseId ->
+                                controller.navigate(Destination.COURSE_DETAIL.route.replace("{courseId}", courseId))
+                            },
+                            onNavigateToInstructor = {
+                                controller.navigate(Destination.INSTRUCTOR_LIST.route)
+                            }
+                        )
+                    }
+                } else if (isPreview) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                            .height(48.dp)
+                            .background(OpinialightBlue, MaterialTheme.shapes.extraLarge),
+                        contentAlignment = Alignment.CenterStart
+                    ) {
+                        Text("  Search Preview...", color = black.copy(0.5f), modifier = Modifier.padding(start = 8.dp))
+                    }
+                }
+            }
         },
         bottomBar = {
             BottomNavBar(navController = controller)
@@ -95,7 +131,6 @@ fun CommentReviewContent(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .verticalScroll(scrollState)
                 .background(OpiniaGreyWhite)
                 .padding(horizontal = 16.dp)
         ) {
@@ -137,76 +172,82 @@ fun CommentReviewContent(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Puanlama Alanı
-            Row(
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(scrollState)
             ) {
-                Box(
-                    modifier = Modifier
-                        .height(46.dp)
-                        .width(100.dp)
-                        .clip(MaterialTheme.shapes.large)
-                        .background(OpiniaPurple),
-                    contentAlignment = Center
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.StarBorder,
-                            contentDescription = "Star",
-                            tint = black,
-                            modifier = Modifier.size(24.dp)
-                        )
-
-                        Spacer(modifier = Modifier.width(8.dp))
-
-                        Text("Rate", style = MaterialTheme.typography.titleSmall, color = black)
-                    }
-                }
-
-                Spacer(modifier = Modifier.width(12.dp))
-
-                // Yıldızlar
+                // Puanlama Alanı
                 Row(
-                    horizontalArrangement = Arrangement.Center
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    for (i in 1..3) {
-                        val isSelected = i <= rating
-                        Icon(
-                            imageVector = if (isSelected) Icons.Filled.Star else Icons.Default.StarBorder,
-                            contentDescription = "$i Star",
-                            tint = Color(0xFFF9A75D), //yellow
-                            modifier = Modifier
-                                .size(48.dp)
-                                .clickable { onRatingChanged(i) }
-                                .padding(4.dp)
-                        )
+                    Box(
+                        modifier = Modifier
+                            .height(46.dp)
+                            .width(100.dp)
+                            .clip(MaterialTheme.shapes.large)
+                            .background(OpiniaPurple),
+                        contentAlignment = Center
+                    ) {
+                        Row(
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.StarBorder,
+                                contentDescription = "Star",
+                                tint = black,
+                                modifier = Modifier.size(24.dp)
+                            )
+
+                            Spacer(modifier = Modifier.width(8.dp))
+
+                            Text("Rate", style = MaterialTheme.typography.titleSmall, color = black)
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.width(12.dp))
+
+                    // Yıldızlar
+                    Row(
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        for (i in 1..3) {
+                            val isSelected = i <= rating
+                            Icon(
+                                imageVector = if (isSelected) Icons.Filled.Star else Icons.Default.StarBorder,
+                                contentDescription = "$i Star",
+                                tint = Color(0xFFF9A75D), //yellow
+                                modifier = Modifier
+                                    .size(48.dp)
+                                    .clickable { onRatingChanged(i) }
+                                    .padding(4.dp)
+                            )
+                        }
                     }
                 }
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                // Yorum Kısmı
+                CustomCommentField(
+                    comment = comment,
+                    onCommentChange = onCommentChange,
+                    onSubmitComment = onSubmitComment,
+                    isLoading = isLoading,
+                    isInputValid = isInputValid,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(32.dp))
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // Yorum Kısmı
-            CustomCommentField(
-                comment = comment,
-                onCommentChange = onCommentChange,
-                onSubmitComment = onSubmitComment,
-                isLoading = isLoading,
-                isInputValid = isInputValid,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }
 
 @Composable
-fun CommentReviewScreen(navController: NavController, commentReviewViewModel: CommentReviewViewModel) {
+fun CommentReviewScreen(navController: NavController, commentReviewViewModel: CommentReviewViewModel, searchViewModel: SearchViewModel) {
 
     val uiState by commentReviewViewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -239,7 +280,8 @@ fun CommentReviewScreen(navController: NavController, commentReviewViewModel: Co
         onCommentChange = commentReviewViewModel::onCommentChanged,
         onSubmitComment = commentReviewViewModel::submitCommentReview,
         isLoading = uiState.isLoading,
-        isInputValid = uiState.comment.isNotBlank() && uiState.rating > 0
+        isInputValid = uiState.comment.isNotBlank() && uiState.rating > 0,
+        searchViewModel = searchViewModel
     )
 
 }
