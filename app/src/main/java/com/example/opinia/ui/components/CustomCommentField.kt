@@ -1,5 +1,6 @@
 package com.example.opinia.ui.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,10 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -22,11 +20,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.opinia.ui.theme.OpiniaDeepBlue
+import com.example.opinia.ui.theme.OpiniaPurple
 import com.example.opinia.ui.theme.OpinialightBlue
 import com.example.opinia.ui.theme.black
 import com.example.opinia.ui.theme.gray
@@ -51,7 +51,7 @@ fun CustomCommentField(
         TextField(
             value = comment,
             onValueChange = { newText: String ->
-                if (newText.length <= 200) {
+                if (newText.length <= 500) {
                     onCommentChange(newText)
                 }
             },
@@ -75,7 +75,7 @@ fun CustomCommentField(
 
         // Karakter Sayacı
         Text(
-            text = "${comment.length}/200",
+            text = "${comment.length}/500",
             color = gray,
             style = MaterialTheme.typography.bodySmall,
             modifier = Modifier
@@ -89,11 +89,10 @@ fun CustomCommentField(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(12.dp)
-                .height(30.dp)
                 .width(64.dp)
-                .clip(MaterialTheme.shapes.large)
-                .background(OpiniaDeepBlue),
-            enabled = !isLoading && isInputValid
+                .clip(MaterialTheme.shapes.extraLarge)
+                .background(OpiniaPurple),
+            enabled = !isLoading
         ) {
             if (isLoading) {
                 CircularProgressIndicator(
@@ -102,13 +101,16 @@ fun CustomCommentField(
                     strokeWidth = 2.dp
                 )
             } else {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.Send,
+                Image(
+                    painter = painterResource(
+                        if (isInputValid)
+                            com.example.opinia.R.drawable.send_filled
+                        else
+                            com.example.opinia.R.drawable.send
+                    ),
                     contentDescription = "Send Comment",
-                    tint = if (isInputValid) OpinialightBlue else OpinialightBlue.copy(alpha = 0.4f),
                     modifier = Modifier
-                        .size(26.dp)
-                        .padding(start = 2.dp)
+                        .size(36.dp)
                 )
             }
         }

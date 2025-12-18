@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class CommentReviewUiState(
+    val courseId: String = "",
     val avatarResId: Int? = null,
     val courseCode: String = "",
     val courseName: String = "",
@@ -47,7 +48,7 @@ class CommentReviewViewModel @Inject constructor(
     private val courseId: String = checkNotNull(savedStateHandle["courseId"])
 
     //navdan gelen argümaları set et
-    private val _uiState = MutableStateFlow(CommentReviewUiState())
+    private val _uiState = MutableStateFlow(CommentReviewUiState(courseId = courseId))
     val uiState = _uiState.asStateFlow()
 
     private val _uiEvent = Channel<CommentReviewUiEvent>()
@@ -110,17 +111,17 @@ class CommentReviewViewModel @Inject constructor(
     }
 
     fun onCommentChanged(comment: String) {
-        if (comment.length <= 200) {
+        if (comment.length <= 500) {
             _uiState.update { it.copy(comment = comment) }
         }
         else {
-            _uiState.update { it.copy(comment = comment.substring(0, 200)) }
+            val trimmedComment = comment.substring(0, 500)
+            _uiState.update { it.copy(comment = trimmedComment) }
         }
     }
 
     fun submitCommentReview() {
         val state = _uiState.value
-        if (state.comment.isBlank()) return // öğrenci review girmek zorundaysa state.rating == 0 ekle
         viewModelScope.launch {
             if (!networkManager.isInternetAvailable()) {
                 _uiEvent.send(CommentReviewUiEvent.ErrorCreatingComment("No internet connection"))
@@ -128,6 +129,14 @@ class CommentReviewViewModel @Inject constructor(
             }
             if (state.comment.isBlank()) {
                 _uiEvent.send(CommentReviewUiEvent.ErrorCreatingComment("Please enter a comment"))
+                return@launch
+            }
+            if (state.comment.length > 500) {
+                _uiEvent.send(CommentReviewUiEvent.ErrorCreatingComment("Comment cannot exceed 500 characters"))
+                return@launch
+            }
+            if (state.rating == 0) {
+                _uiEvent.send(CommentReviewUiEvent.ErrorCreatingComment("Please rate the course"))
                 return@launch
             }
             _uiState.update { it.copy(isLoading = true) }

@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -70,6 +71,7 @@ fun CommentReviewContent(
     comment: String,
     onCommentChange: (String) -> Unit,
     onSubmitComment: () -> Unit,
+    isInputValid: Boolean = false,
     isLoading: Boolean = false
 ) {
     Scaffold(
@@ -97,7 +99,11 @@ fun CommentReviewContent(
                 .background(OpiniaGreyWhite)
                 .padding(horizontal = 16.dp)
         ) {
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(12.dp))
+
+            HorizontalDivider(thickness = 0.5.dp, color = Color.LightGray)
+
+            Spacer(modifier = Modifier.height(12.dp))
 
             // Ders Bilgisi ve Kaydet Butonu
             Row(
@@ -152,11 +158,12 @@ fun CommentReviewContent(
                             imageVector = Icons.Filled.StarBorder,
                             contentDescription = "Star",
                             tint = black,
+                            modifier = Modifier.size(24.dp)
                         )
 
                         Spacer(modifier = Modifier.width(8.dp))
 
-                        Text("Rate", style = MaterialTheme.typography.titleSmall, color = gray)
+                        Text("Rate", style = MaterialTheme.typography.titleSmall, color = black)
                     }
                 }
 
@@ -189,7 +196,7 @@ fun CommentReviewContent(
                 onCommentChange = onCommentChange,
                 onSubmitComment = onSubmitComment,
                 isLoading = isLoading,
-                isInputValid = comment.isNotBlank() && rating > 0,
+                isInputValid = isInputValid,
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -231,7 +238,8 @@ fun CommentReviewScreen(navController: NavController, commentReviewViewModel: Co
         comment = uiState.comment,
         onCommentChange = commentReviewViewModel::onCommentChanged,
         onSubmitComment = commentReviewViewModel::submitCommentReview,
-        isLoading = uiState.isLoading
+        isLoading = uiState.isLoading,
+        isInputValid = uiState.comment.isNotBlank() && uiState.rating > 0
     )
 
 }

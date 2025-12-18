@@ -4,9 +4,11 @@ import androidx.annotation.DrawableRes
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -86,6 +88,8 @@ fun BottomNavBar(navController: NavController) {
         containerColor = OpiniaDeepBlue,
         contentColor = Color.White
     ) {
+        Spacer(modifier = Modifier.width(8.dp))
+
         items.forEach { item ->
             val isSelected = currentRoute == item.route ||
                     item.relatedRoutes.any { related ->
@@ -113,7 +117,7 @@ fun BottomNavBar(navController: NavController) {
                             ),
                             contentDescription = item.name,
                             modifier = Modifier
-                                .size(48.dp)
+                                .size(54.dp)
                                 .scale(scale)
                                 .padding(5.dp)
                         )
@@ -138,6 +142,7 @@ fun BottomNavBar(navController: NavController) {
                 )
             )
         }
+        Spacer(modifier = Modifier.width(8.dp))
     }
 }
 
