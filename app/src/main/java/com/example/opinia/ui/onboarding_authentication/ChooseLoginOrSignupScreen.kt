@@ -1,5 +1,6 @@
 package com.example.opinia.ui.onboarding_authentication
 
+import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -12,11 +13,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
 import androidx.navigation.NavController
 import com.example.opinia.R
 import com.example.opinia.ui.Destination
@@ -26,6 +30,16 @@ import com.example.opinia.ui.theme.OpinialightBlue
 
 @Composable
 fun ChooseLoginOrSignupScreen(navController: NavController) {
+
+    val view = LocalView.current
+    if (!view.isInEditMode) {
+        SideEffect {
+            val window = (view.context as Activity).window
+            window.statusBarColor = android.graphics.Color.WHITE
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
+        }
+    }
+
     ChooseLoginOrSignupContent(
         onLoginClick = { navController.navigate(Destination.LOGIN.route) },
         onSignupClick = { navController.navigate(Destination.SIGNUP_PERSONAL_INFO.route) }
