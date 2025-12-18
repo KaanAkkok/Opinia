@@ -1,6 +1,7 @@
 package com.example.opinia.ui.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.size
@@ -12,6 +13,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.opinia.ui.theme.OpiniaPurple
+import com.example.opinia.ui.theme.OpinialightBlue
 
 @Composable
 fun SelectableAvatarItems(
@@ -34,7 +36,8 @@ fun SelectableAvatarItems(
             .size(130.dp)
             .clip(CircleShape)
             .then(borderModifier)
-            .clickable { onClick() },
+            .clickable { onClick() }
+            .background(OpinialightBlue),
         alpha = 1f
     )
 }
