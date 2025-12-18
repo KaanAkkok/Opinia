@@ -6,6 +6,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -27,9 +28,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavController
 import com.example.opinia.R
@@ -39,9 +42,11 @@ import com.example.opinia.ui.Destination
 import com.example.opinia.ui.component.BottomNavBar
 import com.example.opinia.ui.components.CustomDropdown
 import com.example.opinia.ui.components.CustomTopAppBar
-import com.example.opinia.ui.components.SearchBar
+import com.example.opinia.ui.search.GeneralSearchBar
+import com.example.opinia.ui.search.SearchViewModel
 import com.example.opinia.ui.theme.OpiniaGreyWhite
 import com.example.opinia.ui.theme.OpiniaPurple
+import com.example.opinia.ui.theme.OpinialightBlue
 import com.example.opinia.ui.theme.black
 import com.example.opinia.ui.theme.gray
 
@@ -50,25 +55,54 @@ fun AddCourse1Content(
     avatarResId: Int,
     onAvatarClick: () -> Unit,
     query: String,
-    onQueryChange: (String) -> Unit,
     controller: NavController,
     availableFaculties: List<Faculty>,
     selectedFaculty: Faculty?,
     onFacultySelected: (Faculty) -> Unit,
     availableDepartments: List<Department>,
     onDepartmentSelected: (Department) -> Unit,
+    searchViewModel: SearchViewModel? = null
 ) {
+    val isPreview = LocalInspectionMode.current
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = OpiniaGreyWhite,
         topBar = {
-            CustomTopAppBar(
-                avatarResId = avatarResId,
-                onAvatarClick = onAvatarClick,
-                text = "Add Course",
-                modifier = Modifier.padding(top = 5.dp, start = 3.dp, end = 3.dp)
-            )
+            Column(modifier = Modifier.fillMaxWidth()) {
+                CustomTopAppBar(
+                    avatarResId = avatarResId,
+                    onAvatarClick = onAvatarClick,
+                    text = "Add Course",
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                if (!isPreview && searchViewModel != null) {
+                    Box(modifier = Modifier.fillMaxWidth().zIndex(10f)) {
+                        GeneralSearchBar(
+                            searchViewModel = searchViewModel,
+                            onNavigateToCourse = { courseId ->
+                                controller.navigate(Destination.COURSE_DETAIL.route.replace("{courseId}", courseId))
+                            },
+                            onNavigateToInstructor = {
+                                controller.navigate(Destination.INSTRUCTOR_LIST.route)
+                            }
+                        )
+                    }
+                } else if (isPreview) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                            .height(48.dp)
+                            .background(OpinialightBlue, MaterialTheme.shapes.extraLarge),
+                        contentAlignment = Alignment.CenterStart
+                    ) {
+                        Text("  Search Preview...", color = black.copy(0.5f), modifier = Modifier.padding(start = 8.dp))
+                    }
+                }
+            }
         },
         bottomBar = {
             BottomNavBar(navController = controller)
@@ -78,14 +112,9 @@ fun AddCourse1Content(
         Column(
             modifier = Modifier
                 .padding(innerPadding)
-                .padding(horizontal = 12.dp)
                 .fillMaxSize()
                 .background(OpiniaGreyWhite)
         ) {
-            Spacer(modifier = Modifier.height(24.dp))
-
-            SearchBar(query, onQueryChange)
-
             Spacer(modifier = Modifier.height(32.dp))
 
             Text(
@@ -108,7 +137,6 @@ fun AddCourse1Content(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 4.dp)
                                 .clip(MaterialTheme.shapes.medium)
                                 .background(OpiniaPurple)
                                 .clickable {
@@ -198,7 +226,7 @@ fun AddCourse1Content(
 }
 
 @Composable
-fun AddCourse1Screen(navController: NavController, addCourseViewModel: AddCourseViewModel) {
+fun AddCourse1Screen(navController: NavController, addCourseViewModel: AddCourseViewModel, searchViewModel: SearchViewModel) {
 
     val uiState = addCourseViewModel.uiState.collectAsState().value
     val context = LocalContext.current
@@ -234,13 +262,13 @@ fun AddCourse1Screen(navController: NavController, addCourseViewModel: AddCourse
             avatarResId = uiState.avatarResId ?: R.drawable.turuncu,
             onAvatarClick = { navController.navigate(Destination.STUDENT_PROFILE.route) },
             query = uiState.searchQuery,
-            onQueryChange = addCourseViewModel::onSearchQueryChanged,
             controller = navController,
             availableFaculties = uiState.availableFaculties,
             selectedFaculty = uiState.selectedFaculty,
             onFacultySelected = addCourseViewModel::onFacultySelected,
             availableDepartments = uiState.availableDepartments,
-            onDepartmentSelected = addCourseViewModel::onDepartmentSelected
+            onDepartmentSelected = addCourseViewModel::onDepartmentSelected,
+            searchViewModel = searchViewModel
         )
     } else {
         AddCourse2Content(
@@ -272,7 +300,6 @@ fun AddCourse1ScreenPreview() {
         avatarResId = R.drawable.turuncu,
         onAvatarClick = {},
         query = "",
-        onQueryChange = {},
         controller = NavController(LocalContext.current),
         availableFaculties = emptyList(),
         selectedFaculty = null,

@@ -68,8 +68,7 @@ fun AddCourse2Content(
             CustomTopAppBar(
                 avatarResId = avatarResId,
                 onAvatarClick = onAvatarClick,
-                text = "Add Course",
-                modifier = Modifier.padding(top = 5.dp, start = 3.dp, end = 3.dp)
+                text = "Add Course"
             )
         },
         bottomBar = {
@@ -80,7 +79,6 @@ fun AddCourse2Content(
         Column(
             modifier = Modifier
                 .padding(innerPadding)
-                .padding(horizontal = 12.dp)
                 .fillMaxSize()
                 .background(OpiniaGreyWhite)
         ) {

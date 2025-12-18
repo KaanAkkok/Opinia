@@ -77,7 +77,7 @@ fun <T> CustomDropdown(
             expanded = expanded,
             onDismissRequest = { expanded = false },
             modifier = Modifier
-                .fillMaxWidth(0.85f)
+                .fillMaxWidth(0.91f)
                 .background(OpiniaPurple),
             shape = MaterialTheme.shapes.large
         ) {

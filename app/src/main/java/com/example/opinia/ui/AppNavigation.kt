@@ -26,7 +26,6 @@ import com.example.opinia.ui.onboarding_authentication.SignupStudentPersonalScre
 import com.example.opinia.ui.onboarding_authentication.SplashScreen
 import com.example.opinia.ui.onboarding_authentication.SplashViewModel
 import com.example.opinia.ui.profile.AddCourse1Screen
-import com.example.opinia.ui.profile.AddCourse2Screen
 import com.example.opinia.ui.profile.AddCourseViewModel
 import com.example.opinia.ui.profile.ChangeAvatarScreen
 import com.example.opinia.ui.profile.ChangeAvatarViewModel
@@ -41,6 +40,7 @@ import com.example.opinia.ui.profile.ChangePasswordScreen
 import com.example.opinia.ui.profile.ChangePasswordViewModel
 import com.example.opinia.ui.profile.SupportScreen
 import com.example.opinia.ui.profile.SupportViewModel
+import com.example.opinia.ui.search.SearchViewModel
 
 
 //BU YOLLAR UPDATE EDİLEBİLİR
@@ -56,7 +56,7 @@ enum class Destination(val route: String) {
     DASHBOARD("dashboard"),
     STUDENT_PROFILE("student_profile"),
     COURSE_CATALOG("course_catalog"),
-    COURSE_DETAIL("course_detail"),
+    COURSE_DETAIL("course_detail/{courseId}"),
     INSTRUCTOR_CATALOG("instructor_catalog"),
     INSTRUCTOR_LIST("instructor_list/{departmentName}"),
     STUDENT_SAVED_COURSES("student_saved_courses"),
@@ -64,7 +64,6 @@ enum class Destination(val route: String) {
     STUDENT_CHANGE_PASSWORD("student_change_password"),
     STUDENT_ADD_COURSE1("student_add_course1"),
     SUPPORT("support"),
-
     COMMENT_REVIEW("comment_review/{courseId}")
 }
 
@@ -129,7 +128,8 @@ fun AppNavigation(modifier: Modifier = Modifier) {
 
             composable(Destination.STUDENT_ADD_COURSE1.route) {
                 val addCourseViewModel: AddCourseViewModel = hiltViewModel()
-                AddCourse1Screen(navController, addCourseViewModel)
+                val searchViewModel: SearchViewModel = hiltViewModel()
+                AddCourse1Screen(navController, addCourseViewModel, searchViewModel)
             }
 
             composable(Destination.STUDENT_CHANGE_AVATAR.route) {
@@ -166,7 +166,8 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                 )
             ) {
                 val commentReviewViewModel: CommentReviewViewModel = hiltViewModel()
-                CommentReviewScreen(navController, commentReviewViewModel)
+                val searchViewModel: SearchViewModel = hiltViewModel()
+                CommentReviewScreen(navController, commentReviewViewModel, searchViewModel)
             }
         }
     )
