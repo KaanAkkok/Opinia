@@ -14,7 +14,10 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.opinia.ui.theme.NunitoFontFamily
 import com.example.opinia.ui.theme.OpiniaDeepBlue
 import com.example.opinia.ui.theme.OpinialightBlue
 import com.example.opinia.ui.theme.black
@@ -26,12 +29,17 @@ fun SearchBar(query: String, onQueryChange: (String) -> Unit) {
         onValueChange = onQueryChange,
         modifier = Modifier
             .fillMaxWidth()
-            .height(48.dp)
-            .width(270.dp)
-            .padding(start = 16.dp, end = 16.dp),
+            .height(50.dp)
+            .width(270.dp),
         shape = MaterialTheme.shapes.extraLarge,
         placeholder = {
-            Text("Search", style = MaterialTheme.typography.bodyMedium, color = black)
+            Text(
+                text = "Search",
+                fontFamily = NunitoFontFamily,
+                fontWeight = FontWeight.Normal,
+                fontSize = 15.sp,
+                color = black
+            )
         },
         leadingIcon = {
             Icon(Icons.Default.Search, contentDescription = "Search Icon", tint = OpiniaDeepBlue)
