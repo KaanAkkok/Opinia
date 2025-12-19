@@ -138,7 +138,7 @@ class InstructorViewModel @Inject constructor(
         }
     }
 
-    fun loadInstructorsForDepartment(departmentId: String) {
+    fun loadInstructorsForDepartment(departmentId: String, targetInstructorId: String? = null) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             val deptResult = facultyRepository.getDepartmentById(departmentId)
@@ -148,12 +148,20 @@ class InstructorViewModel @Inject constructor(
 
             if (instResult.isSuccess) {
                 val allInstructors = instResult.getOrNull() ?: emptyList()
-                val filtered = allInstructors.filter { it.departmentIds.contains(departmentId) }
+
+                // 1. Önce departmana göre filtrele
+                var filtered = allInstructors.filter { it.departmentIds.contains(departmentId) }
+
+                // 2. Eğer özel davetiye (targetInstructorId) varsa sadece o hocayı bırak
+                if (targetInstructorId != null) {
+                    filtered = filtered.filter { it.instructorId == targetInstructorId }
+                }
+
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        instructorList = filtered,
-                        filteredInstructorList = filtered,
+                        instructorList = filtered,        // Tüm liste (departmandaki)
+                        filteredInstructorList = filtered, // Ekranda görünen liste
                         currentDepartmentName = departmentName
                     )
                 }

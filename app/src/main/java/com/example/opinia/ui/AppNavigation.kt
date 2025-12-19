@@ -58,7 +58,7 @@ enum class Destination(val route: String) {
     COURSE_CATALOG("course_catalog"),
     COURSE_DETAIL("course_detail/{courseId}"),
     INSTRUCTOR_CATALOG("instructor_catalog"),
-    INSTRUCTOR_LIST("instructor_list/{departmentName}"),
+    INSTRUCTOR_LIST("instructor_list/{departmentName}?targetInstructorId={targetInstructorId}"),
     STUDENT_SAVED_COURSES("student_saved_courses"),
     STUDENT_CHANGE_AVATAR("student_change_avatar"),
     STUDENT_CHANGE_PASSWORD("student_change_password"),
@@ -151,10 +151,29 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                 InstructorCatalogScreen(navController)
             }
 
-            composable(Destination.INSTRUCTOR_LIST.route) { backStackEntry ->
-                val departmentId = backStackEntry.arguments?.getString("departmentName") ?: ""
-                InstructorListScreen(navController, departmentId)
-            }
+        composable(
+            route = Destination.INSTRUCTOR_LIST.route,
+            arguments = listOf(
+                navArgument("departmentName") { type = NavType.StringType },
+                // Yeni argüman tanımı:
+                navArgument("targetInstructorId") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                }
+            )
+        ) { backStackEntry ->
+            val departmentId = backStackEntry.arguments?.getString("departmentName") ?: ""
+            // ID'yi alıyoruz:
+            val targetInstructorId = backStackEntry.arguments?.getString("targetInstructorId")
+
+            // Ekrana gönderiyoruz:
+            InstructorListScreen(
+                navController = navController,
+                departmentId = departmentId,
+                targetInstructorId = targetInstructorId
+            )
+        }
 
             //yorum ekranına courseId vermeniz gerekiyor
             composable(

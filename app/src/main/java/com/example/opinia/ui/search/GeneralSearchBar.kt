@@ -42,13 +42,14 @@ import androidx.compose.ui.unit.sp
 import com.example.opinia.ui.theme.NunitoFontFamily
 import com.example.opinia.ui.theme.WorkSansFontFamily
 import com.example.opinia.ui.theme.gray
+import com.example.opinia.data.model.Instructor
 
 @Composable
 fun GeneralSearchBarContent(
     uiState: SearchUiState,
     onQueryChange: (String) -> Unit,
     onNavigateToCourse: (String) -> Unit,
-    onNavigateToInstructor: () -> Unit,  //instructorlar için tek bir ekran yok o yüzden sadece instructor list ekranına gidecek
+    onNavigateToInstructor: (Instructor) -> Unit,  // <--- DEĞİŞİKLİK 1: Burası artık (Instructor) alıyor
     modifier: Modifier = Modifier
 ) {
     var isExpanded by remember { mutableStateOf(false) }
@@ -197,7 +198,7 @@ fun GeneralSearchBarContent(
                             Column(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clickable { onNavigateToInstructor() }
+                                    .clickable { onNavigateToInstructor(instructor) } // <--- DEĞİŞİKLİK 2: instructor'ı parantez içine koyduk
                                     .padding(12.dp)
                             ) {
                                 Text(
@@ -227,14 +228,14 @@ fun GeneralSearchBarContent(
 fun GeneralSearchBar(
     searchViewModel: SearchViewModel,
     onNavigateToCourse: (String) -> Unit,
-    onNavigateToInstructor: () -> Unit
+    onNavigateToInstructor: (Instructor) -> Unit // <--- DEĞİŞİKLİK 3: Burası da güncellendi
 ) {
     val uiState by searchViewModel.uiState.collectAsState()
     GeneralSearchBarContent(
         uiState = uiState,
         onQueryChange = searchViewModel::onQueryChange,
         onNavigateToCourse = onNavigateToCourse,
-        onNavigateToInstructor = onNavigateToInstructor
+        onNavigateToInstructor = onNavigateToInstructor // Aynen içeri paslıyoruz
     )
 }
 
@@ -245,6 +246,6 @@ fun GeneralSearchBarPreview() {
         uiState = SearchUiState(),
         onQueryChange = {},
         onNavigateToCourse = {},
-        onNavigateToInstructor = {}
+        onNavigateToInstructor = {} // Burası boş kalsa da olur lambda olduğu için, hata verirse { _ -> } yaparsın
     )
 }

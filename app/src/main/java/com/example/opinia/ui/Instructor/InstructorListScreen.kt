@@ -35,6 +35,7 @@ import com.example.opinia.ui.theme.black
 fun InstructorListScreen(
     navController: NavController,
     departmentId: String,
+    targetInstructorId: String? = null, // <--- BU SATIRI EKLE (varsayılanı null)
     viewModel: InstructorViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -48,8 +49,8 @@ fun InstructorListScreen(
         }
     }
 
-    LaunchedEffect(departmentId) {
-        viewModel.loadInstructorsForDepartment(departmentId)
+    LaunchedEffect(departmentId, targetInstructorId) {
+        viewModel.loadInstructorsForDepartment(departmentId, targetInstructorId)
     }
 
     InstructorListContent(
