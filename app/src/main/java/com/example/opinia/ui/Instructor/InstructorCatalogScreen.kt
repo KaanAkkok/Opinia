@@ -16,13 +16,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex // <-- Bu önemli, listeyi üstte tutar
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.opinia.data.model.Faculty
 import com.example.opinia.ui.Destination
 import com.example.opinia.ui.component.BottomNavBar
-import com.example.opinia.ui.components.CustomTopAppBar
+import com.example.opinia.ui.components.OpTopBar
 import com.example.opinia.ui.search.GeneralSearchBar // <-- Yeni barımız
 import com.example.opinia.ui.search.SearchViewModel // <-- Yeni beynimiz
 import com.example.opinia.ui.theme.OpiniaDeepBlue
@@ -70,57 +73,55 @@ fun InstructorCatalogContent(
     onAvatarClick: () -> Unit
 ) {
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        containerColor = OpiniaGreyWhite,
-        topBar = {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                CustomTopAppBar(
-                    avatarResId = uiState.userAvatarResId,
-                    onAvatarClick = onAvatarClick,
-                    text = "Instructor Catalog"
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // --- YENİ SEARCH BAR (ÖZEL DAVETİYE KISMI) ---
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .zIndex(10f) // <-- Listeyi diğer yazıların üstüne çıkarır
-                ) {
-                    GeneralSearchBar(
-                        searchViewModel = searchViewModel,
-                        onNavigateToCourse = { courseId ->
-                            // Burası kurs detayına gider (senin işin değilse boş kalabilir)
-                            // navController.navigate(Destination.COURSE_DETAIL.route.replace("{courseId}", courseId))
-                        },
-                        onNavigateToInstructor = { instructor ->
-                            // İŞTE SİHİR BURADA:
-                            // 1. Hocanın departmanını buluyoruz
-                            val deptId = instructor.departmentIds.firstOrNull() ?: "unknown"
-
-                            // 2. Rotayı oluşturuyoruz: Hem departman ID hem de Hoca ID ekliyoruz
-                            val route = Destination.INSTRUCTOR_LIST.route
-                                .replace("{departmentName}", deptId)
-                                .replace("{targetInstructorId}", instructor.instructorId)
-
-                            // 3. Gönderiyoruz
-                            navController.navigate(route)
-                        }
-                    )
-                }
-            }
-        },
         bottomBar = { BottomNavBar(navController = navController) },
+        containerColor = OpiniaGreyWhite
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .background(OpiniaGreyWhite)
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 24.dp)
         ) {
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(50.dp))
+
+            OpTopBar(
+                title = "Professors",
+                avatarResId = uiState.userAvatarResId,
+                onAvatarClick = onAvatarClick
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // --- YENİ SEARCH BAR (ÖZEL DAVETİYE KISMI) ---
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .zIndex(10f) // <-- Listeyi diğer yazıların üstüne çıkarır
+            ) {
+                GeneralSearchBar(
+                    searchViewModel = searchViewModel,
+                    onNavigateToCourse = { courseId ->
+                        // Burası kurs detayına gider (senin işin değilse boş kalabilir)
+                        // navController.navigate(Destination.COURSE_DETAIL.route.replace("{courseId}", courseId))
+                    },
+                    onNavigateToInstructor = { instructor ->
+                        // İŞTE SİHİR BURADA:
+                        // 1. Hocanın departmanını buluyoruz
+                        val deptId = instructor.departmentIds.firstOrNull() ?: "unknown"
+
+                        // 2. Rotayı oluşturuyoruz: Hem departman ID hem de Hoca ID ekliyoruz
+                        val route = Destination.INSTRUCTOR_LIST.route
+                            .replace("{departmentName}", deptId)
+                            .replace("{targetInstructorId}", instructor.instructorId)
+
+                        // 3. Gönderiyoruz
+                        navController.navigate(route)
+                    }
+                )
+            }
+            // ---------------------------------------------
+
+            Spacer(modifier = Modifier.height(24.dp))
 
             // --- ESKİ SEARCH SONUÇLARI SİLİNDİ, SADECE FAKÜLTE LİSTESİ KALDI ---
             if (uiState.isLoading && uiState.facultyList.isEmpty()) {
@@ -177,7 +178,7 @@ fun DepartmentItem(name: String, onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .height(60.dp)
-            .clip(MaterialTheme.shapes.extraLarge)
+            .clip(MaterialTheme.shapes.medium)
             .background(com.example.opinia.ui.theme.OpiniaPurple)
             .clickable { onClick() }
             .padding(horizontal = 16.dp),
@@ -194,7 +195,7 @@ fun FacultyHeaderBox(text: String, isExpanded: Boolean, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(MaterialTheme.shapes.extraLarge)
+            .clip(MaterialTheme.shapes.medium)
             .background(Color(0xFF9E9EE8)) // Senin istediğin renk
             .clickable { onClick() }
             .padding(horizontal = 16.dp, vertical = 16.dp),

@@ -1,11 +1,7 @@
 @file:Suppress("DEPRECATION")
 
-package com.example.opinia.ui.profile
+package com.example.opinia.ui.catalog
 
-
-import android.app.Activity
-import android.widget.Toast
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,19 +20,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import androidx.core.view.WindowCompat
 import androidx.navigation.NavController
 import com.example.opinia.R
 import com.example.opinia.data.model.Department
@@ -53,7 +44,6 @@ import com.example.opinia.ui.theme.OpinialightBlue
 import com.example.opinia.ui.theme.black
 import com.example.opinia.ui.theme.gray
 
-
 @Composable
 fun AddCourse1Content(
     avatarResId: Int,
@@ -69,7 +59,6 @@ fun AddCourse1Content(
 ) {
     val isPreview = LocalInspectionMode.current
 
-
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = OpiniaGreyWhite,
@@ -83,6 +72,7 @@ fun AddCourse1Content(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
+                // Arama Çubuğu Alanı
                 if (!isPreview && searchViewModel != null) {
                     Box(modifier = Modifier.fillMaxWidth().zIndex(10f)) {
                         GeneralSearchBar(
@@ -90,25 +80,23 @@ fun AddCourse1Content(
                             onNavigateToCourse = { courseId ->
                                 controller.navigate(Destination.COURSE_DETAIL.route.replace("{courseId}", courseId))
                             },
-                            onNavigateToInstructor = { instructor ->
-                                val deptId = instructor.departmentIds.firstOrNull() ?: "unknown"
-                                val route = Destination.INSTRUCTOR_LIST.route
-                                    .replace("{departmentName}", deptId)
-                                    .replace("{targetInstructorId}", instructor.instructorId)
-                                controller.navigate(route)
+                            onNavigateToInstructor = {
+                                controller.navigate(Destination.INSTRUCTOR_LIST.route)
                             }
                         )
                     }
                 } else if (isPreview) {
+                    // Preview modunda arama çubuğu temsili
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp)
+                            .padding(horizontal = 16.dp)
                             .height(48.dp)
-                            .background(OpinialightBlue, MaterialTheme.shapes.extraLarge),
+                            .clip(MaterialTheme.shapes.extraLarge)
+                            .background(OpinialightBlue),
                         contentAlignment = Alignment.CenterStart
                     ) {
-                        Text("  Search Preview...", color = black.copy(0.5f), modifier = Modifier.padding(start = 8.dp))
+                        Text("  Search...", color = black.copy(0.5f), modifier = Modifier.padding(start = 16.dp))
                     }
                 }
             }
@@ -126,20 +114,20 @@ fun AddCourse1Content(
         ) {
             Spacer(modifier = Modifier.height(32.dp))
 
+            // --- FACULTIES SECTION ---
             Text(
                 text = "Faculties",
                 style = MaterialTheme.typography.titleMedium,
                 color = black,
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
-
+            // Arama yapılıyorsa fakülteleri liste olarak göster, değilse Dropdown kullan
             if (query.isNotEmpty()) {
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 8.dp),
+                        .padding(horizontal = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(availableFaculties) { faculty ->
@@ -148,9 +136,7 @@ fun AddCourse1Content(
                                 .fillMaxWidth()
                                 .clip(MaterialTheme.shapes.medium)
                                 .background(OpiniaPurple)
-                                .clickable {
-                                    onFacultySelected(faculty)
-                                }
+                                .clickable { onFacultySelected(faculty) }
                                 .padding(16.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -172,56 +158,60 @@ fun AddCourse1Content(
                     }
                 }
             } else {
-                CustomDropdown(
-                    availableFaculties,
-                    selectedFaculty,
-                    onFacultySelected,
-                    { it.facultyName },
-                    "Select Faculty"
-                )
+                // Dropdown bileşeni (Görseldeki Faculty of Communication kısmı)
+                Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    CustomDropdown(
+                        items = availableFaculties,
+                        selectedItem = selectedFaculty,
+                        onItemSelected = onFacultySelected,
+                        itemLabel = { it.facultyName },
+                        placeholder = "Select Faculty"
+                    )
+                }
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
+            // --- DEPARTMENTS SECTION ---
+            // Sadece bir fakülte seçiliyse ve arama yapılmıyorsa bölümleri göster
             if (selectedFaculty != null && query.isEmpty()) {
                 Text(
                     text = "Departments",
                     style = MaterialTheme.typography.titleMedium,
                     color = black,
-                    modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
                 )
 
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 8.dp),
+                        .padding(horizontal = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
-                    contentPadding = PaddingValues(bottom = 8.dp)
+                    contentPadding = PaddingValues(bottom = 16.dp)
                 ) {
                     items(availableDepartments) { department ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(start = 8.dp, end = 10.dp)
-                                .clip(shape = MaterialTheme.shapes.medium)
-                                .background(OpiniaPurple)
-                                .clickable { onDepartmentSelected(department) }
-                                .height(45.dp),
+                                .height(56.dp) // Görseldeki gibi biraz yüksek
+                                .clip(shape = MaterialTheme.shapes.medium) // Yuvarlak köşeler
+                                .background(OpiniaPurple) // Mor arka plan
+                                .clickable { onDepartmentSelected(department) } // TIKLANABİLİR
+                                .padding(horizontal = 16.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
                                 text = department.departmentName,
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = black,
-                                modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = black
                             )
                         }
                     }
                     if (availableDepartments.isEmpty()) {
                         item {
                             Text(
-                                text = "No departments found or loading...",
-                                modifier = Modifier.padding(16.dp),
+                                text = "Loading departments...",
+                                modifier = Modifier.padding(8.dp),
                                 color = gray
                             )
                         }
@@ -229,105 +219,37 @@ fun AddCourse1Content(
                 }
             }
         }
-
     }
 
 }
-
-
-@Composable
-fun AddCourse1Screen(navController: NavController, addCourseViewModel: AddCourseViewModel, searchViewModel: SearchViewModel) {
-
-
-    val uiState = addCourseViewModel.uiState.collectAsState().value
-    val context = LocalContext.current
-
-    val view = LocalView.current
-    if (!view.isInEditMode) {
-        SideEffect {
-            val window = (view.context as Activity).window
-            window.statusBarColor = android.graphics.Color.WHITE
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = true
-        }
-    }
-
-    LaunchedEffect(key1 = true) {
-        addCourseViewModel.uiEvent.collect { event ->
-            when(event) {
-                is AddCourseUiEvent.CourseAddedSuccess -> {
-                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
-                }
-                is AddCourseUiEvent.Error -> {
-                    Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
-                }
-            }
-        }
-    }
-
-    BackHandler(enabled = uiState.step == 2) {
-        addCourseViewModel.onBackToSelection()
-    }
-
-    if (uiState.step == 1) {
-        AddCourse1Content(
-            avatarResId = uiState.avatarResId ?: R.drawable.turuncu,
-            onAvatarClick = { navController.navigate(Destination.STUDENT_PROFILE.route) },
-            query = uiState.searchQuery,
-            controller = navController,
-            availableFaculties = uiState.availableFaculties,
-            selectedFaculty = uiState.selectedFaculty,
-            onFacultySelected = addCourseViewModel::onFacultySelected,
-            availableDepartments = uiState.availableDepartments,
-            onDepartmentSelected = addCourseViewModel::onDepartmentSelected,
-            searchViewModel = searchViewModel
-        )
-    } else {
-        AddCourse2Content(
-            avatarResId = uiState.avatarResId ?: R.drawable.turuncu,
-            onAvatarClick = { navController.navigate(Destination.STUDENT_PROFILE.route) },
-            controller = navController,
-            query = uiState.searchQuery,
-            onQueryChange = addCourseViewModel::onSearchQueryChanged,
-            departmentName = uiState.selectedDepartment?.departmentName ?: "",
-            courses = uiState.availableCourses,
-            onBackClick = { addCourseViewModel.onBackToSelection() },
-            enrolledCourseIds = uiState.enrolledCourseIds,
-            onCourseToggle = { course, isCurrentlyAdded ->
-                if (isCurrentlyAdded) {
-                    addCourseViewModel.onRemoveCourseClicked(course)
-                } else {
-                    addCourseViewModel.onAddCourseClicked(course)
-                }
-            }
-        )
-    }
-
-}
-
 
 @Preview(showBackground = true)
 @Composable
 fun AddCourse1ScreenPreview() {
-    // Define sample data for the preview
     val sampleFaculties = listOf(
-        Faculty(facultyId = "1", facultyName = "Faculty of Engineering"),
-        Faculty(facultyId = "2", facultyName = "Faculty of Arts & Sciences")
+        Faculty("1", "Faculty of Communication"),
+        Faculty("2", "Faculty of Engineering")
     )
     val sampleDepartments = listOf(
-        Department(departmentId = "1", departmentName = "Computer Engineering", facultyId = "1"),
-        Department(departmentId = "2", departmentName = "Electrical Engineering", facultyId = "1")
+        Department("1", "Visual Communication Design", "1"),
+        Department("2", "Radio Television and Cinema", "1"),
+        Department("3", "Advertising Design and Communucation", "1"),
+        Department("4","Public Relations and Advertising", "2"),
+        Department("5","Journalism" , "2")
+
     )
 
     AddCourse1Content(
         avatarResId = R.drawable.turuncu,
         onAvatarClick = {},
         query = "",
-        controller = NavController(LocalContext.current), // Complete this line
+        controller = NavController(LocalContext.current),
         availableFaculties = sampleFaculties,
-        selectedFaculty = sampleFaculties.first(), // Provide a selected faculty for preview
+        // FIX: Select the first faculty from the list for the preview.
+        selectedFaculty = sampleFaculties.first(),
         onFacultySelected = {},
         availableDepartments = sampleDepartments,
         onDepartmentSelected = {}
-        // searchViewModel can be null as it's optional
     )
-} // <-- Add the missing closing brace here
+}
+
