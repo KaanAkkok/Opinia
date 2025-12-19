@@ -202,19 +202,13 @@ fun GeneralSearchBarContent(
                                     .padding(12.dp)
                             ) {
                                 Text(
-                                    text = instructor.instructorTitle,
+                                    text = instructor.instructorTitle + " " + instructor.instructorName,
                                     fontFamily = WorkSansFontFamily,
                                     fontWeight = FontWeight.Normal,
                                     fontSize = 15.sp,
                                     color = black
                                 )
-                                Text(
-                                    text = instructor.instructorName,
-                                    fontFamily = WorkSansFontFamily,
-                                    fontWeight = FontWeight.Normal,
-                                    fontSize = 15.sp,
-                                    color = black
-                                )
+
                             }
                         }
                     }

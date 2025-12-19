@@ -43,7 +43,7 @@ fun CustomCommentField(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(360.dp)
+            .height(300.dp)
             .clip(MaterialTheme.shapes.extraLarge)
             .background(OpinialightBlue)
             .padding(8.dp)

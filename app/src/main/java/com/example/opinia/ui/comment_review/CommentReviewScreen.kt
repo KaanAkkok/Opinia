@@ -21,7 +21,6 @@ import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -101,8 +100,12 @@ fun CommentReviewContent(
                             onNavigateToCourse = { courseId ->
                                 controller.navigate(Destination.COURSE_DETAIL.route.replace("{courseId}", courseId))
                             },
-                            onNavigateToInstructor = {
-                                controller.navigate(Destination.INSTRUCTOR_LIST.route)
+                            onNavigateToInstructor = { instructor ->
+                                val deptId = instructor.departmentIds.firstOrNull() ?: "unknown"
+                                val route = Destination.INSTRUCTOR_LIST.route
+                                    .replace("{departmentName}", deptId)
+                                    .replace("{targetInstructorId}", instructor.instructorId)
+                                controller.navigate(route)
                             }
                         )
                     }

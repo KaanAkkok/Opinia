@@ -85,8 +85,12 @@ fun AddCourse1Content(
                             onNavigateToCourse = { courseId ->
                                 controller.navigate(Destination.COURSE_DETAIL.route.replace("{courseId}", courseId))
                             },
-                            onNavigateToInstructor = {
-                                controller.navigate(Destination.INSTRUCTOR_LIST.route)
+                            onNavigateToInstructor = { instructor ->
+                                val deptId = instructor.departmentIds.firstOrNull() ?: "unknown"
+                                val route = Destination.INSTRUCTOR_LIST.route
+                                    .replace("{departmentName}", deptId)
+                                    .replace("{targetInstructorId}", instructor.instructorId)
+                                controller.navigate(route)
                             }
                         )
                     }
