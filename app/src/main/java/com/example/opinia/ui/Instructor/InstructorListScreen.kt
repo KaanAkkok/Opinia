@@ -25,10 +25,12 @@ import androidx.navigation.compose.rememberNavController
 import com.example.opinia.data.model.Instructor
 import com.example.opinia.ui.Destination
 import com.example.opinia.ui.component.BottomNavBar
-import com.example.opinia.ui.components.OpSearchBar
-import com.example.opinia.ui.components.OpTopBar
+import com.example.opinia.ui.components.CustomTopAppBar
+import com.example.opinia.ui.components.SearchBar
+import com.example.opinia.ui.theme.NunitoFontFamily
 import com.example.opinia.ui.theme.OpiniaGreyWhite
 import com.example.opinia.ui.theme.OpinialightBlue
+import com.example.opinia.ui.theme.WorkSansFontFamily
 import com.example.opinia.ui.theme.black
 
 @Composable
@@ -74,34 +76,29 @@ fun InstructorListContent(
     onAvatarClick: () -> Unit
 ) {
     Scaffold(
-        // topBar PARAMETRESİ KALDIRILDI
+        modifier = Modifier.fillMaxSize(),
+        containerColor = OpiniaGreyWhite,
+        topBar = {
+            CustomTopAppBar(
+                avatarResId = uiState.userAvatarResId,
+                onAvatarClick = onAvatarClick,
+                text = "Professors"
+            )
+        },
         bottomBar = { BottomNavBar(navController = navController) },
-        containerColor = Color(0xFFF5F5F5)
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(horizontal = 24.dp)
+                .background(OpiniaGreyWhite)
+                .padding(horizontal = 16.dp)
         ) {
-            // DASHBOARD İLE AYNI ÜST BOŞLUK (50dp)
-            Spacer(modifier = Modifier.height(50.dp))
-
-            // HEADER BURADA
-            OpTopBar(
-                title = "Professors",
-                avatarResId = uiState.userAvatarResId,
-                onAvatarClick = onAvatarClick
-            )
-
             Spacer(modifier = Modifier.height(24.dp))
 
-            OpSearchBar(
-                value = searchText,
-                onValueChange = onSearchChange
-            )
+            SearchBar(searchText, onSearchChange)
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             if (uiState.isLoading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
@@ -109,7 +106,9 @@ fun InstructorListContent(
                 Text(
                     color = black,
                     text = uiState.currentDepartmentName,
-                    style = MaterialTheme.typography.titleLarge.copy(fontSize = 20.sp, fontWeight = FontWeight.Bold),
+                    fontFamily = NunitoFontFamily,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 20.sp,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
 
@@ -157,10 +156,9 @@ fun ProfessorInfoRow(icon: ImageVector, text: String, isBold: Boolean = false) {
         Spacer(modifier = Modifier.width(12.dp))
         Text(
             text = text,
-            style = MaterialTheme.typography.bodyMedium.copy(
-                fontSize = 14.sp,
-                fontWeight = if (isBold) FontWeight.Bold else FontWeight.Normal
-            ),
+            fontFamily = WorkSansFontFamily,
+            fontWeight = FontWeight.Normal,
+            fontSize = 15.sp,
             color = Color.Black.copy(alpha = 0.8f)
         )
     }
