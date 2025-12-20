@@ -11,6 +11,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.opinia.ui.comment_review.CommentReviewScreen
 import com.example.opinia.ui.comment_review.CommentReviewViewModel
+import com.example.opinia.ui.course.CourseCatalogScreen1
+import com.example.opinia.ui.course.CourseCatalogViewModel
+import com.example.opinia.ui.course.CourseDetailScreen
+import com.example.opinia.ui.course.CourseDetailViewModel
 import com.example.opinia.ui.dashboard.DashboardScreen
 import com.example.opinia.ui.dashboard.DashboardViewModel
 import com.example.opinia.ui.onboarding_authentication.ChooseLoginOrSignupScreen
@@ -161,6 +165,7 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                     nullable = true
                     defaultValue = null
                 }
+
             )
         ) { backStackEntry ->
             val departmentId = backStackEntry.arguments?.getString("departmentName") ?: ""
@@ -188,6 +193,24 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                 val searchViewModel: SearchViewModel = hiltViewModel()
                 CommentReviewScreen(navController, commentReviewViewModel, searchViewModel)
             }
+        composable(Destination.COURSE_CATALOG.route) {
+            val courseCatalogViewModel: CourseCatalogViewModel = hiltViewModel()
+            val searchViewModel: SearchViewModel = hiltViewModel()
+            CourseCatalogScreen1(navController, courseCatalogViewModel, searchViewModel)
+        }
+
+        composable(
+            route = Destination.COURSE_DETAIL.route,
+            arguments = listOf(
+                navArgument("courseId") {
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            val courseDetailViewModel: CourseDetailViewModel = hiltViewModel()
+            val searchViewModel: SearchViewModel = hiltViewModel()
+            CourseDetailScreen(navController, courseDetailViewModel, searchViewModel)
+        }
         }
     )
 }
