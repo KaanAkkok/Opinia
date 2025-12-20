@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandCircleDown
 import androidx.compose.material3.DropdownMenu
@@ -70,12 +71,19 @@ fun <T> CustomDropdown(
                     fontWeight = FontWeight.Normal,
                     fontSize = 15.sp
                 )
-                Icon(
-                    imageVector = Icons.Default.ExpandCircleDown,
-                    contentDescription = "Dropdown Icon",
-                    tint = OpiniaDeepBlue,
-                    modifier = Modifier.rotate(if (expanded) 180f else 0f)
-                )
+                Box(contentAlignment = Alignment.Center) {
+                    Box(
+                        modifier = Modifier
+                            .size(14.dp)
+                            .background(Color.White, androidx.compose.foundation.shape.CircleShape)
+                    )
+                    Icon(
+                        imageVector = Icons.Default.ExpandCircleDown,
+                        contentDescription = "Expand",
+                        tint = OpiniaDeepBlue,
+                        modifier = Modifier.rotate(if (expanded) 180f else 0f)
+                    )
+                }
             }
         }
         DropdownMenu(
