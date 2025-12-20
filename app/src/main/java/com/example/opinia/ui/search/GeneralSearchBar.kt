@@ -49,12 +49,18 @@ fun GeneralSearchBarContent(
     uiState: SearchUiState,
     onQueryChange: (String) -> Unit,
     onNavigateToCourse: (String) -> Unit,
-    onNavigateToInstructor: (Instructor) -> Unit,  // <--- DEĞİŞİKLİK 1: Burası artık (Instructor) alıyor
+    onNavigateToInstructor: (Instructor) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
     val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(uiState.searchQuery) {
+        if (uiState.searchQuery.isNotEmpty()) {
+            isExpanded = true
+        }
+    }
 
     LaunchedEffect(isExpanded) {
         if (isExpanded) {
@@ -100,7 +106,11 @@ fun GeneralSearchBarContent(
                 },
                 trailingIcon = {
                     if (isExpanded && uiState.searchQuery.isNotEmpty()) {
-                        IconButton(onClick = { onQueryChange("") }) {
+                        IconButton(onClick = {
+                            onQueryChange("")
+                            isExpanded = false
+                        }
+                    ) {
                             Icon(
                                 Icons.Default.Close,
                                 contentDescription = "Close icon",
@@ -133,7 +143,7 @@ fun GeneralSearchBarContent(
             }
         }
 
-        if(isExpanded && (uiState.searchResultsCourses.isNotEmpty() || uiState.searchResultsInstructors.isNotEmpty())) {
+        if (isExpanded && uiState.searchQuery.isNotEmpty()) {
             Card(
                 modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
                 elevation = CardDefaults.cardElevation(6.dp),
@@ -204,7 +214,7 @@ fun GeneralSearchBarContent(
                             Column(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clickable { onNavigateToInstructor(instructor) } // <--- DEĞİŞİKLİK 2: instructor'ı parantez içine koyduk
+                                    .clickable { onNavigateToInstructor(instructor) }
                                     .padding(12.dp)
                             ) {
                                 Text(
@@ -218,6 +228,22 @@ fun GeneralSearchBarContent(
                             }
                         }
                     }
+
+                    if (!uiState.isLoading &&
+                        uiState.searchResultsCourses.isEmpty() &&
+                        uiState.searchResultsInstructors.isEmpty()
+                    ) {
+                        item {
+                            Text(
+                                text = "No results found for \"${uiState.searchQuery}\"",
+                                fontFamily = NunitoFontFamily,
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 15.sp,
+                                color = gray,
+                                modifier = Modifier.padding(16.dp)
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -228,14 +254,14 @@ fun GeneralSearchBarContent(
 fun GeneralSearchBar(
     searchViewModel: SearchViewModel,
     onNavigateToCourse: (String) -> Unit,
-    onNavigateToInstructor: (Instructor) -> Unit // <--- DEĞİŞİKLİK 3: Burası da güncellendi
+    onNavigateToInstructor: (Instructor) -> Unit
 ) {
     val uiState by searchViewModel.uiState.collectAsState()
     GeneralSearchBarContent(
         uiState = uiState,
         onQueryChange = searchViewModel::onQueryChange,
         onNavigateToCourse = onNavigateToCourse,
-        onNavigateToInstructor = onNavigateToInstructor // Aynen içeri paslıyoruz
+        onNavigateToInstructor = onNavigateToInstructor
     )
 }
 
@@ -246,6 +272,6 @@ fun GeneralSearchBarPreview() {
         uiState = SearchUiState(),
         onQueryChange = {},
         onNavigateToCourse = {},
-        onNavigateToInstructor = {} // Burası boş kalsa da olur lambda olduğu için, hata verirse { _ -> } yaparsın
+        onNavigateToInstructor = {}
     )
 }
