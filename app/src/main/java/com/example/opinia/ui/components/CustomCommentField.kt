@@ -22,12 +22,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.opinia.ui.theme.OpiniaDeepBlue
 import com.example.opinia.ui.theme.OpiniaPurple
 import com.example.opinia.ui.theme.OpinialightBlue
+import com.example.opinia.ui.theme.WorkSansFontFamily
 import com.example.opinia.ui.theme.black
 import com.example.opinia.ui.theme.gray
 
@@ -56,7 +59,13 @@ fun CustomCommentField(
                 }
             },
             placeholder = {
-                Text(text = "Add comment...", color = gray, style = MaterialTheme.typography.bodyLarge)
+                Text(
+                    text = "Add comment...",
+                    color = gray,
+                    fontFamily = WorkSansFontFamily,
+                    fontWeight = FontWeight.Light,
+                    fontSize = 15.sp
+                )
             },
             modifier = Modifier
                 .fillMaxSize()
@@ -77,7 +86,9 @@ fun CustomCommentField(
         Text(
             text = "${comment.length}/500",
             color = gray,
-            style = MaterialTheme.typography.bodySmall,
+            fontFamily = WorkSansFontFamily,
+            fontWeight = FontWeight.Normal,
+            fontSize = 15.sp,
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .padding(start = 12.dp, bottom = 12.dp)

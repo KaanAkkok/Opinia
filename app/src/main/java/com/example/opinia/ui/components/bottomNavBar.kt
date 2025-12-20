@@ -84,7 +84,7 @@ fun BottomNavBar(navController: NavController) {
     NavigationBar(
         modifier = Modifier
             .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
-            .height(100.dp),
+            .height(84.dp),
         containerColor = OpiniaDeepBlue,
         contentColor = Color.White
     ) {
@@ -98,7 +98,7 @@ fun BottomNavBar(navController: NavController) {
 
             // Mevcut scale animasyonun
             val scale by animateFloatAsState(
-                targetValue = if (isSelected) 1.5f else 1.0f,
+                targetValue = if (isSelected) 1.3f else 1.0f,
                 animationSpec = tween(durationMillis = 300),
                 label = "iconScale"
             )
@@ -117,7 +117,7 @@ fun BottomNavBar(navController: NavController) {
                             ),
                             contentDescription = item.name,
                             modifier = Modifier
-                                .size(54.dp)
+                                .size(48.dp)
                                 .scale(scale)
                                 .padding(5.dp)
                         )
