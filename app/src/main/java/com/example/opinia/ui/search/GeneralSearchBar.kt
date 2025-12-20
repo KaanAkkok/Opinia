@@ -79,11 +79,17 @@ fun GeneralSearchBarContent(
                 onValueChange = { onQueryChange(it) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(48.dp)
+                    .height(50.dp)
                     .focusRequester(focusRequester),
                 shape = MaterialTheme.shapes.extraLarge,
                 placeholder = {
-                    Text("Search", style = MaterialTheme.typography.bodyMedium, color = black)
+                    Text(
+                        text = "Search",
+                        fontFamily = NunitoFontFamily,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 15.sp,
+                        color = black
+                    )
                 },
                 leadingIcon = {
                     Icon(

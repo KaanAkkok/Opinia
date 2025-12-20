@@ -147,11 +147,11 @@ fun CommentReviewContent(
             ) {
                 Text(
                     text = buildAnnotatedString {
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, fontSize = 18.sp, fontFamily = NunitoFontFamily)) {
+                        withStyle(style = SpanStyle(fontFamily = NunitoFontFamily, fontWeight = FontWeight.SemiBold, fontSize = 20.sp)) {
                             append(courseCode)
                         }
                         append(" - ")
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, fontSize = 16.sp, fontFamily = NunitoFontFamily)) {
+                        withStyle(style = SpanStyle(fontFamily = NunitoFontFamily, fontWeight = FontWeight.SemiBold, fontSize = 20.sp)) {
                             append(courseName)
                         }
                     },
@@ -194,7 +194,7 @@ fun CommentReviewContent(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
-                                imageVector = Icons.Filled.StarBorder,
+                                imageVector = if(rating == 0) Icons.Filled.StarBorder else Icons.Filled.Star,
                                 contentDescription = "Star",
                                 tint = black,
                                 modifier = Modifier.size(24.dp)
@@ -202,7 +202,13 @@ fun CommentReviewContent(
 
                             Spacer(modifier = Modifier.width(8.dp))
 
-                            Text("Rate", style = MaterialTheme.typography.titleSmall, color = black)
+                            Text(
+                                text = if(rating == 0) "Rate" else rating.toString(),
+                                color = black,
+                                fontFamily = NunitoFontFamily,
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 15.sp
+                            )
                         }
                     }
 
@@ -227,7 +233,7 @@ fun CommentReviewContent(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
                 // Yorum Kısmı
                 CustomCommentField(

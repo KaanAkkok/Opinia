@@ -21,8 +21,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.opinia.R
+import com.example.opinia.ui.theme.NunitoFontFamily
 import com.example.opinia.ui.theme.OpiniaGreyWhite
 import com.example.opinia.ui.theme.OpinialightBlue
 import com.example.opinia.ui.theme.black
@@ -52,7 +55,13 @@ fun CustomTopAppBar(
                         modifier = modifier.size(50.dp)
                     )
                     Spacer(modifier = modifier.width(6.dp))
-                    Text(text, style = MaterialTheme.typography.titleMedium, color = black)
+                    Text(
+                        text = text,
+                        color = black,
+                        fontFamily = NunitoFontFamily,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp
+                    )
                 }
 
                 // SAĞ: Avatar
