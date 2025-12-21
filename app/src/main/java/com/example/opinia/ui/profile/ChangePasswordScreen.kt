@@ -30,8 +30,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavController
 import com.example.opinia.R
@@ -39,6 +41,7 @@ import com.example.opinia.ui.Destination
 import com.example.opinia.ui.component.BottomNavBar
 import com.example.opinia.ui.components.CustomButton
 import com.example.opinia.ui.components.PasswordTextFieldInput
+import com.example.opinia.ui.theme.NunitoFontFamily
 import com.example.opinia.ui.theme.OpiniaDeepBlue
 import com.example.opinia.ui.theme.OpiniaGreyWhite
 import com.example.opinia.ui.theme.OpinialightBlue
@@ -96,11 +99,23 @@ fun ChangePasswordContent(
         ) {
             Spacer(modifier = Modifier.height(48.dp))
 
-            Text("Change Password", style = MaterialTheme.typography.titleMedium, color = OpiniaDeepBlue)
+            Text(
+                text = "Change Password",
+                color = OpiniaDeepBlue,
+                fontFamily = NunitoFontFamily,
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp
+            )
 
             Spacer(modifier = Modifier.height(36.dp))
 
-            Text("Old Password", style = MaterialTheme.typography.titleSmall, color = OpiniaDeepBlue)
+            Text(
+                text = "Old Password",
+                color = OpiniaDeepBlue,
+                fontFamily = NunitoFontFamily,
+                fontWeight = FontWeight.Bold,
+                fontSize = 15.sp
+            )
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -115,7 +130,13 @@ fun ChangePasswordContent(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            Text("New Password", style = MaterialTheme.typography.titleSmall, color = OpiniaDeepBlue)
+            Text(
+                text = "New Password",
+                color = OpiniaDeepBlue,
+                fontFamily = NunitoFontFamily,
+                fontWeight = FontWeight.Bold,
+                fontSize = 15.sp
+            )
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -130,7 +151,13 @@ fun ChangePasswordContent(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            Text("Confirm Password", style = MaterialTheme.typography.titleSmall, color = OpiniaDeepBlue)
+            Text(
+                text = "Confirm Password",
+                color = OpiniaDeepBlue,
+                fontFamily = NunitoFontFamily,
+                fontWeight = FontWeight.Bold,
+                fontSize = 15.sp
+            )
 
             Spacer(modifier = Modifier.height(12.dp))
 
