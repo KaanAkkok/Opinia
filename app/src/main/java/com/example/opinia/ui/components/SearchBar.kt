@@ -23,11 +23,11 @@ import com.example.opinia.ui.theme.OpinialightBlue
 import com.example.opinia.ui.theme.black
 
 @Composable
-fun SearchBar(query: String, onQueryChange: (String) -> Unit) {
+fun SearchBar(query: String, onQueryChange: (String) -> Unit, modifier: Modifier = Modifier) {
     TextField(
         value = query,
         onValueChange = onQueryChange,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(50.dp)
             .width(270.dp),
