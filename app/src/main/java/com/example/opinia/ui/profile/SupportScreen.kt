@@ -32,13 +32,16 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavController
 import com.example.opinia.R
 import com.example.opinia.ui.component.BottomNavBar
 import com.example.opinia.ui.components.CustomButton
+import com.example.opinia.ui.theme.NunitoFontFamily
 import com.example.opinia.ui.theme.OpiniaDeepBlue
 import com.example.opinia.ui.theme.OpiniaGreyWhite
 import com.example.opinia.ui.theme.OpinialightBlue
@@ -96,18 +99,30 @@ fun SupportContent(
                     .background(OpiniaGreyWhite),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("Support", style = MaterialTheme.typography.titleMedium, color = OpiniaDeepBlue)
+                Text(
+                    "Support",
+                    color = OpiniaDeepBlue,
+                    fontFamily = NunitoFontFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Box(
                     modifier = Modifier
                         .width(270.dp)
-                        .height(30.dp)
+                        .height(36.dp)
                         .background(OpiniaDeepBlue, MaterialTheme.shapes.extraLarge),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Text("support@opinia.com", style = MaterialTheme.typography.titleSmall, color = OpinialightBlue)
+                    Text(
+                        "support@opinia.com",
+                        color = OpinialightBlue,
+                        fontFamily = NunitoFontFamily,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 15.sp,
+                    )
                 }
             }
 
@@ -126,7 +141,7 @@ fun SupportContent(
                     containerColor = OpiniaDeepBlue,
                     contentColor = OpinialightBlue,
                     modifier = Modifier
-                        .height(40.dp)
+                        .height(42.dp)
                         .width(180.dp)
                 )
 
@@ -140,7 +155,7 @@ fun SupportContent(
                     containerColor = OpinialightBlue,
                     contentColor = OpiniaDeepBlue,
                     modifier = Modifier
-                        .height(40.dp)
+                        .height(42.dp)
                         .width(180.dp)
                 )
             }

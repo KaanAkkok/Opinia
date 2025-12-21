@@ -11,7 +11,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.opinia.ui.theme.NunitoFontFamily
 import com.example.opinia.ui.theme.OpiniaDeepBlue
 import com.example.opinia.ui.theme.OpinialightBlue
 
@@ -26,7 +29,8 @@ fun CustomButton(
     height: Int = 36,
     width: Int = 270,
     modifier: Modifier = Modifier,
-    text: String
+    text: String,
+    fontSize: Int = 20
 ) {
 
     Button(
@@ -41,7 +45,12 @@ fun CustomButton(
             contentColor = contentColor
         )
     ) {
-        Text(text, style = textStyle)
+        Text(
+            text = text,
+            fontFamily = NunitoFontFamily,
+            fontWeight = FontWeight.Bold,
+            fontSize = fontSize.sp
+        )
     }
 
 }

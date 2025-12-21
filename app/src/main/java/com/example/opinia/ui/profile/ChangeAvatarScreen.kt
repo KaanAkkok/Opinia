@@ -105,12 +105,12 @@ fun ChangeAvatarContent(
                 onClick = onOkClicked,
                 isButtonEnabled = !isLoading,
                 text = "OK",
-                shape = MaterialTheme.shapes.medium,
+                shape = MaterialTheme.shapes.extraLarge,
                 textStyle = MaterialTheme.typography.titleMedium,
-                containerColor = OpinialightBlue,
-                contentColor = OpiniaDeepBlue,
+                containerColor = OpiniaDeepBlue,
+                contentColor = OpinialightBlue,
                 modifier = Modifier
-                    .height(40.dp)
+                    .height(42.dp)
                     .width(180.dp)
             )
         }

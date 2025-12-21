@@ -25,6 +25,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.SpanStyle
@@ -41,8 +42,10 @@ import com.example.opinia.ui.component.BottomNavBar
 import com.example.opinia.ui.components.CustomCourseCard
 import com.example.opinia.ui.components.CustomTopAppBar
 import com.example.opinia.ui.components.SearchBar
+import com.example.opinia.ui.theme.NunitoFontFamily
 import com.example.opinia.ui.theme.OpiniaGreyWhite
 import com.example.opinia.ui.theme.OpiniaPurple
+import com.example.opinia.ui.theme.WorkSansFontFamily
 import com.example.opinia.ui.theme.black
 import com.example.opinia.ui.theme.gray
 
@@ -81,18 +84,21 @@ fun AddCourse2Content(
                 .padding(innerPadding)
                 .fillMaxSize()
                 .background(OpiniaGreyWhite)
+                .padding(horizontal = 8.dp)
         ) {
             Spacer(modifier = Modifier.height(24.dp))
 
-            SearchBar(query, onQueryChange)
+            SearchBar(query, onQueryChange, modifier = Modifier.padding(horizontal = 8.dp))
 
             Spacer(modifier = Modifier.height(32.dp))
 
             Text(
                 text = departmentName,
-                style = MaterialTheme.typography.titleMedium,
                 color = black,
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+                fontFamily = NunitoFontFamily,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 20.sp,
+                modifier = Modifier.padding(horizontal = 8.dp)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -100,8 +106,7 @@ fun AddCourse2Content(
             LazyColumn(
                 state = listState,
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 8.dp),
+                    .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 contentPadding = PaddingValues(bottom = 8.dp)
             ) {
@@ -118,15 +123,15 @@ fun AddCourse2Content(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(start = 8.dp, end = 10.dp)
-                            .height(45.dp),
-                        backgroundColor = OpiniaPurple,
+                            .height(52.dp),
+                        backgroundColor = Color(0xFFB4B4ED),
                         innerPadding = PaddingValues(0.dp),
                         activeIcon = Icons.Filled.CheckBox,
                         inactiveIcon = Icons.Filled.CheckBoxOutlineBlank,
                         iconSize = 24.dp,
                         iconStartPadding = 12.dp,
-                        codeStyle = SpanStyle(fontWeight = FontWeight.Bold),
-                        nameStyle = SpanStyle(fontWeight = FontWeight.Normal, fontSize = 14.sp)
+                        codeStyle = SpanStyle(fontFamily = WorkSansFontFamily, fontWeight = FontWeight.Normal, fontSize = 15.sp),
+                        nameStyle = SpanStyle(fontFamily = WorkSansFontFamily, fontWeight = FontWeight.Normal, fontSize = 15.sp)
                     )
                 }
                 if (courses.isEmpty()) {

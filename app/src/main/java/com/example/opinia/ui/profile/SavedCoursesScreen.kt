@@ -28,6 +28,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.SpanStyle
@@ -44,8 +45,10 @@ import com.example.opinia.ui.component.BottomNavBar
 import com.example.opinia.ui.components.CustomCourseCard
 import com.example.opinia.ui.components.CustomTopAppBar
 import com.example.opinia.ui.components.SearchBar
+import com.example.opinia.ui.theme.NunitoFontFamily
 import com.example.opinia.ui.theme.OpiniaGreyWhite
 import com.example.opinia.ui.theme.OpiniaPurple
+import com.example.opinia.ui.theme.WorkSansFontFamily
 import com.example.opinia.ui.theme.black
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -72,7 +75,6 @@ fun SavedCoursesContent(
                 avatarResId = avatarResId,
                 onAvatarClick = onAvatarClick,
                 text = "Saved Courses",
-                modifier = Modifier.padding(top = 5.dp, start = 3.dp, end = 3.dp)
             )
         },
         bottomBar = {
@@ -82,21 +84,23 @@ fun SavedCoursesContent(
         Column(
             modifier = Modifier
                 .padding(innerPadding)
-                .padding(horizontal = 12.dp)
                 .fillMaxSize()
                 .background(OpiniaGreyWhite)
+                .padding(horizontal = 8.dp)
         ) {
             Spacer(modifier = Modifier.height(24.dp))
 
-            SearchBar(query, onQueryChange)
+            SearchBar(query, onQueryChange, modifier = Modifier.padding(horizontal = 8.dp))
 
             Spacer(modifier = Modifier.height(32.dp))
 
             Text(
                 text = departmentName,
-                style = MaterialTheme.typography.titleMedium,
                 color = black,
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+                fontFamily = NunitoFontFamily,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 20.sp,
+                modifier = Modifier.padding(horizontal = 8.dp)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -104,8 +108,7 @@ fun SavedCoursesContent(
             LazyColumn(
                 state = listState,
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 8.dp),
+                    .fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 contentPadding = PaddingValues(bottom = 8.dp)
             ) { items(
@@ -121,15 +124,15 @@ fun SavedCoursesContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(start = 8.dp, end = 10.dp)
-                            .height(45.dp),
-                        backgroundColor = OpiniaPurple,
+                            .height(52.dp),
+                        backgroundColor = Color(0xFFB4B4ED),
                         innerPadding = PaddingValues(0.dp),
                         activeIcon = Icons.Filled.Bookmark,
                         inactiveIcon = Icons.Filled.BookmarkBorder,
                         iconSize = 24.dp,
                         iconStartPadding = 12.dp,
-                        codeStyle = SpanStyle(fontWeight = FontWeight.Bold),
-                        nameStyle = SpanStyle(fontWeight = FontWeight.Normal, fontSize = 14.sp)
+                        codeStyle = SpanStyle(fontFamily = WorkSansFontFamily, fontWeight = FontWeight.Normal, fontSize = 15.sp),
+                        nameStyle = SpanStyle(fontFamily = WorkSansFontFamily, fontWeight = FontWeight.Normal, fontSize = 15.sp)
                     )
                 }
             }
@@ -177,10 +180,9 @@ fun SavedCoursesScreen(
         departmentName = uiState.departmentName,
         temporarilyUnsavedIds = uiState.temporarilyUnsavedIds,
         savedCourses = uiState.savedCourses,
+        //eğer ilgili derse gidilmeyecekse burayı ve ekrandanki onCourseClick'ı sil
         onCourseClick = { courseId ->
-            // UPDATE GEREKEBİLİR
-            // Destination yapına göre parametre gönderme:
-            navController.navigate("${Destination.COURSE_DETAIL.route}/$courseId")
+            navController.navigate(Destination.COURSE_DETAIL.route.replace("{courseId}", courseId))
         },
         onUnsaveClick = { courseId ->
             savedCoursesViewModel.onToggleSaveCourse(courseId)
