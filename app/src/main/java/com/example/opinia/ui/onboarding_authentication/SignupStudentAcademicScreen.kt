@@ -23,8 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavController
 import com.example.opinia.R
@@ -33,6 +35,7 @@ import com.example.opinia.data.model.Faculty
 import com.example.opinia.ui.Destination
 import com.example.opinia.ui.components.CustomButton
 import com.example.opinia.ui.components.DropdownWithAnimation
+import com.example.opinia.ui.theme.NunitoFontFamily
 import com.example.opinia.ui.theme.OpiniaDeepBlue
 import com.example.opinia.ui.theme.OpinialightBlue
 import kotlinx.coroutines.flow.collectLatest
@@ -79,7 +82,13 @@ fun SignupStudentAcademicContent(
 
         Spacer(modifier = Modifier.height(64.dp))
 
-        Text("Faculty", style = MaterialTheme.typography.titleSmall, color = OpinialightBlue)
+        Text(
+            text = "Faculty",
+            color = OpinialightBlue,
+            fontFamily = NunitoFontFamily,
+            fontWeight = FontWeight.Bold,
+            fontSize = 15.sp
+        )
 
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -87,7 +96,13 @@ fun SignupStudentAcademicContent(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        Text("Department", style = MaterialTheme.typography.titleSmall, color = OpinialightBlue)
+        Text(
+            text = "Department",
+            color = OpinialightBlue,
+            fontFamily = NunitoFontFamily,
+            fontWeight = FontWeight.Bold,
+            fontSize = 15.sp
+        )
 
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -95,7 +110,13 @@ fun SignupStudentAcademicContent(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        Text("Year", style = MaterialTheme.typography.titleSmall, color = OpinialightBlue)
+        Text(
+            text = "Year",
+            color = OpinialightBlue,
+            fontFamily = NunitoFontFamily,
+            fontWeight = FontWeight.Bold,
+            fontSize = 15.sp
+        )
 
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -111,7 +132,7 @@ fun SignupStudentAcademicContent(
             containerColor = OpinialightBlue,
             contentColor = OpiniaDeepBlue,
             modifier = Modifier
-                .height(40.dp)
+                .height(42.dp)
                 .width(180.dp)
         )
     }

@@ -29,6 +29,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,8 +41,10 @@ import com.example.opinia.data.model.Course
 import com.example.opinia.ui.Destination
 import com.example.opinia.ui.components.CustomButton
 import com.example.opinia.ui.components.CustomCourseCard
+import com.example.opinia.ui.theme.NunitoFontFamily
 import com.example.opinia.ui.theme.OpiniaDeepBlue
 import com.example.opinia.ui.theme.OpinialightBlue
+import com.example.opinia.ui.theme.WorkSansFontFamily
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -71,7 +75,13 @@ fun SignupStudentCourseContent(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        Text("Choose Your Courses", style = MaterialTheme.typography.titleSmall, color = OpinialightBlue)
+        Text(
+            text = "Choose Your Courses",
+            color = OpinialightBlue,
+            fontFamily = NunitoFontFamily,
+            fontWeight = FontWeight.Bold,
+            fontSize = 15.sp
+        )
 
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -95,8 +105,8 @@ fun SignupStudentCourseContent(
                     activeIcon = Icons.Default.CheckBox,
                     inactiveIcon = Icons.Default.CheckBoxOutlineBlank,
                     iconSize = 20.dp,
-                    codeStyle = MaterialTheme.typography.titleSmall.toSpanStyle(),
-                    nameStyle = MaterialTheme.typography.titleSmall.copy(fontSize = 13.sp).toSpanStyle()
+                    codeStyle = SpanStyle(fontFamily = WorkSansFontFamily, fontWeight = FontWeight.Normal, fontSize = 13.sp),
+                    nameStyle = SpanStyle(fontFamily = WorkSansFontFamily, fontWeight = FontWeight.Normal, fontSize = 13.sp)
                 )
             }
         }
@@ -111,7 +121,7 @@ fun SignupStudentCourseContent(
             containerColor = OpinialightBlue,
             contentColor = OpiniaDeepBlue,
             modifier = Modifier
-                .height(40.dp)
+                .height(42.dp)
                 .width(180.dp)
         )
 

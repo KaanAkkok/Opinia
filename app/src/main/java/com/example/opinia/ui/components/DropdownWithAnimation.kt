@@ -27,11 +27,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.opinia.ui.theme.OpiniaDeepBlue
 import com.example.opinia.ui.theme.OpinialightBlue
+import com.example.opinia.ui.theme.WorkSansFontFamily
 
 @Composable
 fun <T> DropdownWithAnimation(
@@ -64,8 +67,10 @@ fun <T> DropdownWithAnimation(
         if (hasValidText) {
             Text(
                 text = labelText,
-                style = MaterialTheme.typography.titleSmall,
                 color = OpiniaDeepBlue,
+                fontFamily = WorkSansFontFamily,
+                fontWeight = FontWeight.Medium,
+                fontSize = 15.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 textAlign = TextAlign.Center,
@@ -104,8 +109,10 @@ fun <T> DropdownWithAnimation(
 
                         Text(
                             text = itemLabel(item),
-                            style = MaterialTheme.typography.titleSmall,
-                            color = OpiniaDeepBlue
+                            color = OpiniaDeepBlue,
+                            fontFamily = WorkSansFontFamily,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 15.sp,
                         )
                     }
                 }

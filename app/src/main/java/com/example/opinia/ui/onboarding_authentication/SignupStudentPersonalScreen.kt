@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,8 +32,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavController
 import com.example.opinia.R
@@ -40,6 +44,7 @@ import com.example.opinia.ui.Destination
 import com.example.opinia.ui.components.CustomButton
 import com.example.opinia.ui.components.PasswordTextFieldInput
 import com.example.opinia.ui.components.TextFieldInput
+import com.example.opinia.ui.theme.NunitoFontFamily
 import com.example.opinia.ui.theme.OpiniaDeepBlue
 import com.example.opinia.ui.theme.OpinialightBlue
 import kotlinx.coroutines.flow.collectLatest
@@ -63,12 +68,14 @@ fun SignupStudentPersonalContent(
 ) {
 
     val selectedAvatarRes = allAvatars.find { it.key == selectedAvatarId }?.resId
+    val scrollState = rememberScrollState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(OpiniaDeepBlue)
-            .padding(horizontal = 12.dp),
+            .padding(horizontal = 12.dp)
+            .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -82,6 +89,16 @@ fun SignupStudentPersonalContent(
 
         Spacer(modifier = Modifier.height(32.dp))
 
+        Text(
+            text ="Profile",
+            color = OpinialightBlue,
+            fontFamily = NunitoFontFamily,
+            fontWeight = FontWeight.Bold,
+            fontSize = 15.sp
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
         if (selectedAvatarRes != null) {
             Image(
                 painter = painterResource(id = selectedAvatarRes),
@@ -90,6 +107,7 @@ fun SignupStudentPersonalContent(
                 modifier = Modifier
                     .size(70.dp)
                     .clip(CircleShape)
+                    .background(OpinialightBlue)
                     .clickable { onAvatarClick() }
             )
         } else {
@@ -112,13 +130,15 @@ fun SignupStudentPersonalContent(
             }
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text("Profile", style = MaterialTheme.typography.titleSmall, color = OpinialightBlue)
-
         Spacer(modifier = Modifier.height(24.dp))
 
-        Text("Student Name", style = MaterialTheme.typography.titleSmall, color = OpinialightBlue)
+        Text(
+            text = "Student Name",
+            color = OpinialightBlue,
+            fontFamily = NunitoFontFamily,
+            fontWeight = FontWeight.Bold,
+            fontSize = 15.sp
+        )
 
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -126,7 +146,13 @@ fun SignupStudentPersonalContent(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        Text("Student Surname", style = MaterialTheme.typography.titleSmall, color = OpinialightBlue)
+        Text(
+            text = "Student Surname",
+            color = OpinialightBlue,
+            fontFamily = NunitoFontFamily,
+            fontWeight = FontWeight.Bold,
+            fontSize = 15.sp
+        )
 
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -134,7 +160,13 @@ fun SignupStudentPersonalContent(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        Text("Student Email", style = MaterialTheme.typography.titleSmall, color = OpinialightBlue)
+        Text(
+            text = "Student Email",
+            color = OpinialightBlue,
+            fontFamily = NunitoFontFamily,
+            fontWeight = FontWeight.Bold,
+            fontSize = 15.sp
+        )
 
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -142,7 +174,13 @@ fun SignupStudentPersonalContent(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        Text("Password", style = MaterialTheme.typography.titleSmall, color = OpinialightBlue)
+        Text(
+            text = "Password",
+            color = OpinialightBlue,
+            fontFamily = NunitoFontFamily,
+            fontWeight = FontWeight.Bold,
+            fontSize = 15.sp
+        )
 
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -150,7 +188,13 @@ fun SignupStudentPersonalContent(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        Text("Confirm Password", style = MaterialTheme.typography.titleSmall, color = OpinialightBlue)
+        Text(
+            text = "Confirm Password",
+            color = OpinialightBlue,
+            fontFamily = NunitoFontFamily,
+            fontWeight = FontWeight.Bold,
+            fontSize = 15.sp
+        )
 
         Spacer(modifier = Modifier.height(12.dp))
 

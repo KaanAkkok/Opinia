@@ -83,7 +83,7 @@ fun ChooseLoginOrSignupContent(
                 containerColor = OpinialightBlue,
                 contentColor = OpiniaDeepBlue,
                 modifier = Modifier
-                    .height(40.dp)
+                    .height(42.dp)
                     .width(180.dp)
             )
 
@@ -97,7 +97,7 @@ fun ChooseLoginOrSignupContent(
                 containerColor = OpinialightBlue,
                 contentColor = OpiniaDeepBlue,
                 modifier = Modifier
-                    .height(40.dp)
+                    .height(42.dp)
                     .width(180.dp)
             )
         }

@@ -24,13 +24,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavController
 import com.example.opinia.R
 import com.example.opinia.ui.components.CustomButton
 import com.example.opinia.ui.components.TextFieldInput
+import com.example.opinia.ui.theme.NunitoFontFamily
 import com.example.opinia.ui.theme.OpiniaDeepBlue
 import com.example.opinia.ui.theme.OpinialightBlue
 import kotlinx.coroutines.flow.collectLatest
@@ -59,9 +62,25 @@ fun ForgotPasswordScreenContent(
                 .height(63.dp)
         )
 
-        Spacer(modifier = Modifier.height(120.dp))
+        Spacer(modifier = Modifier.height(60.dp))
 
-        Text("Student Email", style = MaterialTheme.typography.titleSmall, color = OpinialightBlue)
+        Text(
+            text = "Reset Password",
+            color = OpinialightBlue,
+            fontFamily = NunitoFontFamily,
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp
+        )
+
+        Spacer(modifier = Modifier.height(60.dp))
+
+        Text(
+            "Student Email",
+            color = OpinialightBlue,
+            fontFamily = NunitoFontFamily,
+            fontWeight = FontWeight.Bold,
+            fontSize = 15.sp
+        )
 
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -78,14 +97,20 @@ fun ForgotPasswordScreenContent(
             containerColor = OpinialightBlue,
             contentColor = OpiniaDeepBlue,
             modifier = Modifier
-                .height(40.dp)
-                .width(185.dp)
+                .height(42.dp)
+                .width(200.dp)
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
         TextButton(onClick = onGoBackToLoginClick) {
-            Text(text = "Back to login", style = MaterialTheme.typography.titleSmall, color = OpinialightBlue)
+            Text(
+                text = "Back to login",
+                color = OpinialightBlue,
+                fontFamily = NunitoFontFamily,
+                fontWeight = FontWeight.Normal,
+                fontSize = 13.sp
+            )
         }
 
     }

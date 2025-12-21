@@ -22,14 +22,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavController
 import com.example.opinia.R
 import com.example.opinia.data.model.Avatar
 import com.example.opinia.ui.components.AvatarChooseBox
 import com.example.opinia.ui.components.CustomButton
+import com.example.opinia.ui.theme.NunitoFontFamily
 import com.example.opinia.ui.theme.OpiniaDeepBlue
 import com.example.opinia.ui.theme.OpinialightBlue
 
@@ -60,7 +63,13 @@ fun SignupStudentAvatarContent(
 
         Spacer(modifier = Modifier.height(64.dp))
 
-        Text("Choose Your Profile", style = MaterialTheme.typography.titleSmall, color = OpinialightBlue)
+        Text(
+            text = "Choose Your Profile",
+            color = OpinialightBlue,
+            fontFamily = NunitoFontFamily,
+            fontWeight = FontWeight.Bold,
+            fontSize = 15.sp
+        )
 
         Spacer(modifier = Modifier.height(32.dp))
 
@@ -80,7 +89,7 @@ fun SignupStudentAvatarContent(
             containerColor = OpinialightBlue,
             contentColor = OpiniaDeepBlue,
             modifier = Modifier
-                .height(40.dp)
+                .height(42.dp)
                 .width(180.dp)
         )
     }

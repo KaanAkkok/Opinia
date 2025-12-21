@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,6 +23,7 @@ import com.example.opinia.ui.Destination
 import com.example.opinia.ui.components.CustomButton
 import com.example.opinia.ui.components.PasswordTextFieldInput
 import com.example.opinia.ui.components.TextFieldInput
+import com.example.opinia.ui.theme.NunitoFontFamily
 import com.example.opinia.ui.theme.OpiniaDeepBlue
 import com.example.opinia.ui.theme.OpinialightBlue
 import kotlinx.coroutines.flow.collectLatest
@@ -53,7 +55,13 @@ fun LoginScreenContent(
 
         Spacer(modifier = Modifier.height(120.dp))
 
-        Text("Student Email", style = MaterialTheme.typography.titleSmall, color = OpinialightBlue)
+        Text(
+            "Student Email",
+            color = OpinialightBlue,
+            fontFamily = NunitoFontFamily,
+            fontWeight = FontWeight.Bold,
+            fontSize = 15.sp
+        )
 
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -61,7 +69,13 @@ fun LoginScreenContent(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        Text("Password", style = MaterialTheme.typography.titleSmall, color = OpinialightBlue)
+        Text(
+            "Password",
+            color = OpinialightBlue,
+            fontFamily = NunitoFontFamily,
+            fontWeight = FontWeight.Bold,
+            fontSize = 15.sp
+        )
 
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -74,7 +88,13 @@ fun LoginScreenContent(
                 modifier = Modifier.align(Alignment.End),
                 contentPadding = PaddingValues(0.dp)
             ) {
-                Text("Forgot My Password", style = MaterialTheme.typography.titleSmall.copy(fontSize = 12.sp), color = OpinialightBlue)
+                Text(
+                    "Forgot My Password",
+                    color = OpinialightBlue,
+                    fontFamily = NunitoFontFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 13.sp
+                )
             }
         }
 
@@ -88,7 +108,7 @@ fun LoginScreenContent(
             containerColor = OpinialightBlue,
             contentColor = OpiniaDeepBlue,
             modifier = Modifier
-                .height(40.dp)
+                .height(42.dp)
                 .width(180.dp)
         )
     }
