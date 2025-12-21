@@ -115,10 +115,11 @@ fun AppNavigation(modifier: Modifier = Modifier) {
                     SignupStudentCourseScreen(navController, registerViewModel)
                 }
             }
-            composable(Destination.DASHBOARD.route) {
-                val dashboardViewModel: DashboardViewModel = hiltViewModel()
-                DashboardScreen(navController, dashboardViewModel)
-            }
+        composable(Destination.DASHBOARD.route) {
+            val dashboardViewModel: DashboardViewModel = hiltViewModel()
+            val searchViewModel: SearchViewModel = hiltViewModel()
+            DashboardScreen(navController, dashboardViewModel, searchViewModel)
+        }
 
             composable(Destination.STUDENT_PROFILE.route) {
                 val profileScreenViewModel: ProfileViewModel = hiltViewModel()
