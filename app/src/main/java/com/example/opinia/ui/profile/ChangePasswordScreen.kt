@@ -152,7 +152,7 @@ fun ChangePasswordContent(
                 contentColor = OpinialightBlue,
                 shape = MaterialTheme.shapes.medium,
                 textStyle = MaterialTheme.typography.titleMedium,
-                height = 40,
+                height = 42,
                 width = 180
             )
 

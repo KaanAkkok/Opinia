@@ -27,11 +27,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavController
@@ -44,9 +47,11 @@ import com.example.opinia.ui.components.CustomDropdown
 import com.example.opinia.ui.components.CustomTopAppBar
 import com.example.opinia.ui.search.GeneralSearchBar
 import com.example.opinia.ui.search.SearchViewModel
+import com.example.opinia.ui.theme.NunitoFontFamily
 import com.example.opinia.ui.theme.OpiniaGreyWhite
 import com.example.opinia.ui.theme.OpiniaPurple
 import com.example.opinia.ui.theme.OpinialightBlue
+import com.example.opinia.ui.theme.WorkSansFontFamily
 import com.example.opinia.ui.theme.black
 import com.example.opinia.ui.theme.gray
 
@@ -118,14 +123,16 @@ fun AddCourse1Content(
                 .padding(innerPadding)
                 .fillMaxSize()
                 .background(OpiniaGreyWhite)
+                .padding(horizontal = 16.dp)
         ) {
             Spacer(modifier = Modifier.height(32.dp))
 
             Text(
                 text = "Faculties",
-                style = MaterialTheme.typography.titleMedium,
                 color = black,
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+                fontFamily = NunitoFontFamily,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 20.sp
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -141,7 +148,7 @@ fun AddCourse1Content(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clip(MaterialTheme.shapes.medium)
+                                .clip(shape = MaterialTheme.shapes.extraLarge)
                                 .background(OpiniaPurple)
                                 .clickable {
                                     onFacultySelected(faculty)
@@ -151,8 +158,10 @@ fun AddCourse1Content(
                         ) {
                             Text(
                                 text = faculty.facultyName,
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = black
+                                color = black,
+                                fontFamily = WorkSansFontFamily,
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 15.sp
                             )
                         }
                     }
@@ -172,7 +181,8 @@ fun AddCourse1Content(
                     selectedFaculty,
                     onFacultySelected,
                     { it.facultyName },
-                    "Select Faculty"
+                    "Select Faculty",
+                    Color(0xFF9E9EE8)
                 )
             }
 
@@ -181,15 +191,17 @@ fun AddCourse1Content(
             if (selectedFaculty != null && query.isEmpty()) {
                 Text(
                     text = "Departments",
-                    style = MaterialTheme.typography.titleMedium,
                     color = black,
-                    modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
+                    fontFamily = NunitoFontFamily,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 20.sp
                 )
+
+                Spacer(modifier = Modifier.height(8.dp))
 
                 LazyColumn(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 8.dp),
+                        .fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     contentPadding = PaddingValues(bottom = 8.dp)
                 ) {
@@ -197,18 +209,19 @@ fun AddCourse1Content(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(start = 8.dp, end = 10.dp)
-                                .clip(shape = MaterialTheme.shapes.medium)
-                                .background(OpiniaPurple)
+                                .clip(shape = MaterialTheme.shapes.extraLarge)
+                                .background(Color(0xFFB4B4ED))
                                 .clickable { onDepartmentSelected(department) }
-                                .height(45.dp),
+                                .height(52.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
                                 text = department.departmentName,
-                                style = MaterialTheme.typography.bodyLarge,
                                 color = black,
-                                modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+                                modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                                fontFamily = WorkSansFontFamily,
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 15.sp
                             )
                         }
                     }

@@ -104,7 +104,8 @@ fun ProfileContent(
                 contentColor = OpinialightBlue,
                 modifier = Modifier
                     .height(36.dp)
-                    .width(270.dp)
+                    .width(270.dp),
+                fontSize = 15
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -118,7 +119,8 @@ fun ProfileContent(
                 contentColor = OpinialightBlue,
                 modifier = Modifier
                     .height(36.dp)
-                    .width(270.dp)
+                    .width(270.dp),
+                fontSize = 15
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -132,7 +134,8 @@ fun ProfileContent(
                 contentColor = OpinialightBlue,
                 modifier = Modifier
                     .height(36.dp)
-                    .width(270.dp)
+                    .width(270.dp),
+                fontSize = 15
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -146,7 +149,8 @@ fun ProfileContent(
                 contentColor = OpinialightBlue,
                 modifier = Modifier
                     .height(36.dp)
-                    .width(270.dp)
+                    .width(270.dp),
+                fontSize = 15
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -160,7 +164,8 @@ fun ProfileContent(
                 contentColor = OpinialightBlue,
                 modifier = Modifier
                     .height(36.dp)
-                    .width(270.dp)
+                    .width(270.dp),
+                fontSize = 15
             )
 
             Spacer(modifier = Modifier.height(28.dp))
@@ -177,7 +182,8 @@ fun ProfileContent(
                     contentColor = OpinialightBlue,
                     modifier = Modifier
                         .height(40.dp)
-                        .width(100.dp)
+                        .width(100.dp),
+                    fontSize = 16
                 )
 
                 Spacer(modifier = Modifier.width(27.dp))
@@ -195,7 +201,8 @@ fun ProfileContent(
                     contentColor = OpinialightBlue,
                     modifier = Modifier
                         .height(40.dp)
-                        .width(100.dp)
+                        .width(100.dp),
+                    fontSize = 16
                 )
             }
 
@@ -209,7 +216,7 @@ fun ProfileContent(
                 containerColor = OpinialightBlue,
                 contentColor = OpiniaDeepBlue,
                 modifier = Modifier
-                    .height(40.dp)
+                    .height(42.dp)
                     .width(180.dp)
             )
 
