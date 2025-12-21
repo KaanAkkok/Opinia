@@ -133,7 +133,8 @@ fun CustomPopularCourseCard(
                     CustomCommentCard(
                         item = item,
                         isMyReview = false,
-                        containerColor = OpiniaPurple
+                        containerColor = OpiniaPurple,
+                        imageSize = 64.dp
                     )
                 }
             }
