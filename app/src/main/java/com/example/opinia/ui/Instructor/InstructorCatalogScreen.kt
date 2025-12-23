@@ -1,47 +1,44 @@
 package com.example.opinia.ui.instructor
 
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExpandCircleDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex // <-- Bu önemli, listeyi üstte tutar
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.opinia.ui.Destination
 import com.example.opinia.ui.component.BottomNavBar
+import com.example.opinia.ui.components.CustomDropdown
 import com.example.opinia.ui.components.CustomTopAppBar
-import com.example.opinia.ui.search.GeneralSearchBar // <-- Yeni barımız
-import com.example.opinia.ui.search.SearchViewModel // <-- Yeni beynimiz
+import com.example.opinia.ui.search.GeneralSearchBar
+import com.example.opinia.ui.search.SearchViewModel
 import com.example.opinia.ui.theme.NunitoFontFamily
-import com.example.opinia.ui.theme.OpiniaDeepBlue
 import com.example.opinia.ui.theme.OpiniaGreyWhite
+import com.example.opinia.ui.theme.WorkSansFontFamily
 import com.example.opinia.ui.theme.black
+import com.example.opinia.ui.theme.gray
 
 @Composable
 fun InstructorCatalogScreen(
     navController: NavController,
     viewModel: InstructorViewModel = hiltViewModel(),
-    searchViewModel: SearchViewModel = hiltViewModel() // <-- 1. SearchViewModel eklendi
+    searchViewModel: SearchViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    // Status bar rengi ayarı (Bunu senin için korudum)
-    val view = androidx.compose.ui.platform.LocalView.current
+    val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as android.app.Activity).window
@@ -51,11 +48,10 @@ fun InstructorCatalogScreen(
 
     InstructorCatalogContent(
         uiState = uiState,
-        searchViewModel = searchViewModel, // <-- İçeri paslıyoruz
+        searchViewModel = searchViewModel,
         navController = navController,
-        onToggleDepartments = { viewModel.toggleDepartments() },
+        onFacultySelected = { viewModel.onFacultySelected(it) },
         onDepartmentClicked = { deptId ->
-            // Normal departman seçimi (düz giriş)
             val baseRoute = Destination.INSTRUCTOR_LIST.route.substringBefore("?")
             navController.navigate(baseRoute.replace("{departmentName}", deptId))
         },
@@ -68,7 +64,7 @@ fun InstructorCatalogContent(
     uiState: InstructorUiState,
     searchViewModel: SearchViewModel,
     navController: NavController,
-    onToggleDepartments: () -> Unit,
+    onFacultySelected: (com.example.opinia.data.model.Faculty) -> Unit,
     onDepartmentClicked: (String) -> Unit,
     onAvatarClick: () -> Unit
 ) {
@@ -85,29 +81,19 @@ fun InstructorCatalogContent(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // --- YENİ SEARCH BAR (ÖZEL DAVETİYE KISMI) ---
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .zIndex(10f) // <-- Listeyi diğer yazıların üstüne çıkarır
+                        .zIndex(10f)
                 ) {
                     GeneralSearchBar(
                         searchViewModel = searchViewModel,
-                        onNavigateToCourse = { courseId ->
-                            // Burası kurs detayına gider (senin işin değilse boş kalabilir)
-                            // navController.navigate(Destination.COURSE_DETAIL.route.replace("{courseId}", courseId))
-                        },
+                        onNavigateToCourse = { },
                         onNavigateToInstructor = { instructor ->
-                            // İŞTE SİHİR BURADA:
-                            // 1. Hocanın departmanını buluyoruz
                             val deptId = instructor.departmentIds.firstOrNull() ?: "unknown"
-
-                            // 2. Rotayı oluşturuyoruz: Hem departman ID hem de Hoca ID ekliyoruz
                             val route = Destination.INSTRUCTOR_LIST.route
                                 .replace("{departmentName}", deptId)
                                 .replace("{targetInstructorId}", instructor.instructorId)
-
-                            // 3. Gönderiyoruz
                             navController.navigate(route)
                         }
                     )
@@ -125,112 +111,78 @@ fun InstructorCatalogContent(
         ) {
             Spacer(modifier = Modifier.height(32.dp))
 
-            // --- ESKİ SEARCH SONUÇLARI SİLİNDİ, SADECE FAKÜLTE LİSTESİ KALDI ---
-            if (uiState.isLoading && uiState.facultyList.isEmpty()) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
-                }
-            } else {
+            // 1. FAKÜLTE BAŞLIĞI
+            Text(
+                color = black,
+                text = "Faculties",
+                fontFamily = NunitoFontFamily,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 20.sp
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // 2. DROPDOWN (DÜZELTİLDİ)
+            // defaultText yerine placeholder kullanıyoruz.
+            // Eğer parametre isimlerinde hala hata alırsan 'items', 'selectedItem' gibi isimleri silip
+            // sırasıyla (pozisyonel olarak) vermeyi deneyebilirsin, ama muhtemelen bu isimler doğrudur.
+            CustomDropdown(
+                items = uiState.facultyList,
+                selectedItem = uiState.selectedFaculty,
+                onItemSelected = onFacultySelected,
+                itemLabel = { it.facultyName },
+                placeholder = "Select Faculty", // <--- BURASI DÜZELTİLDİ (Eskiden defaultText idi)
+                color = Color(0xFF9E9EE8)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // 3. DEPARTMAN LİSTESİ
+            if (uiState.selectedFaculty != null) {
                 Text(
                     color = black,
-                    text = "Faculties",
+                    text = "Departments",
                     fontFamily = NunitoFontFamily,
                     fontWeight = FontWeight.SemiBold,
-                    fontSize = 20.sp
+                    fontSize = 20.sp,
+                    modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
-
-                val displayText = uiState.selectedFaculty?.facultyName ?: "Faculty of Communication"
-                FacultyHeaderBox(
-                    text = displayText,
-                    isExpanded = uiState.isDepartmentsVisible,
-                    onClick = onToggleDepartments
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                if (uiState.isDepartmentsVisible) {
-                    Text(
-                        color = black,
-                        text = "Departments",
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    )
-
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
-                        contentPadding = PaddingValues(bottom = 24.dp)
-                    ) {
-                        items(uiState.departmentList) { dept ->
-                            DepartmentItem(
-                                name = dept.departmentName,
-                                onClick = { onDepartmentClicked(dept.departmentId) }
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(bottom = 24.dp)
+                ) {
+                    items(uiState.departmentList) { dept ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(52.dp)
+                                .clip(shape = MaterialTheme.shapes.extraLarge)
+                                .background(Color(0xFFB4B4ED))
+                                .clickable { onDepartmentClicked(dept.departmentId) },
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = dept.departmentName,
+                                color = black,
+                                modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                                fontFamily = WorkSansFontFamily,
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 15.sp
+                            )
+                        }
+                    }
+                    if (uiState.departmentList.isEmpty()) {
+                        item {
+                            Text(
+                                text = "No departments found.",
+                                modifier = Modifier.padding(8.dp),
+                                color = gray
                             )
                         }
                     }
                 }
             }
-        }
-    }
-}
-
-// --- YARDIMCI BİLEŞENLER (Aynen korudum) ---
-
-@Composable
-fun DepartmentItem(name: String, onClick: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(56.dp)
-            .clip(MaterialTheme.shapes.extraLarge)
-            .background(com.example.opinia.ui.theme.OpiniaPurple)
-            .clickable { onClick() }
-            .padding(horizontal = 16.dp),
-        contentAlignment = Alignment.CenterStart
-    ) {
-        Text(text = name, style = MaterialTheme.typography.bodyLarge, color = black.copy(alpha = 0.8f))
-    }
-}
-
-@Composable
-fun FacultyHeaderBox(text: String, isExpanded: Boolean, onClick: () -> Unit) {
-    val rotationState by animateFloatAsState(targetValue = if (isExpanded) 180f else 0f, label = "Arrow")
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(MaterialTheme.shapes.extraLarge)
-            .background(Color(0xFF9E9EE8)) // Senin istediğin renk
-            .clickable { onClick() }
-            .padding(horizontal = 16.dp, vertical = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.bodyLarge,
-            color = black.copy(alpha = 0.8f),
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.weight(1f) // Oku sağa yaslar
-        )
-
-        Spacer(modifier = Modifier.width(8.dp))
-
-        Box(contentAlignment = Alignment.Center) {
-            Box(
-                modifier = Modifier
-                    .size(14.dp)
-                    .background(Color.White, androidx.compose.foundation.shape.CircleShape)
-            )
-            Icon(
-                imageVector = Icons.Default.ExpandCircleDown,
-                contentDescription = "Expand",
-                tint = OpiniaDeepBlue,
-                modifier = Modifier
-                    .size(24.dp)
-                    .rotate(rotationState)
-            )
         }
     }
 }

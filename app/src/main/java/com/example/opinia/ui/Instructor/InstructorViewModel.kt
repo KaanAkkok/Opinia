@@ -24,14 +24,15 @@ data class InstructorUiState(
     // Katalog Ekranı Verileri
     val facultyList: List<Faculty> = emptyList(),
     val departmentList: List<Department> = emptyList(),
-    val selectedFaculty: Faculty? = null,
-    val isDepartmentsVisible: Boolean = false,
+    val selectedFaculty: Faculty? = null, // Seçili fakülte
 
-    // Global Arama (Katalog Ekranı için)
-    val globalSearchResults: List<Instructor> = emptyList(), // EKLENDİ: Arama sonuçları
-    val isGlobalSearching: Boolean = false, // EKLENDİ: Arama modunda mıyız?
+    val isFacultyDropdownExpanded: Boolean = false, // Fakülte listesi açık mı?
 
-    // Liste Ekranı Verileri (Departman içi)
+    // Global Arama
+    val globalSearchResults: List<Instructor> = emptyList(),
+    val isGlobalSearching: Boolean = false,
+
+    // Liste Ekranı Verileri
     val instructorList: List<Instructor> = emptyList(),
     val filteredInstructorList: List<Instructor> = emptyList(),
     val currentDepartmentName: String = "",
@@ -41,7 +42,7 @@ data class InstructorUiState(
 @HiltViewModel
 class InstructorViewModel @Inject constructor(
     private val facultyRepository: FacultyDepartmentRepository,
-    private val instructorRepository: InstructorRepository, // Repo'yu kullanacağız
+    private val instructorRepository: InstructorRepository,
     private val studentRepository: StudentRepository,
     private val avatarProvider: AvatarProvider
 ) : ViewModel() {
@@ -56,6 +57,8 @@ class InstructorViewModel @Inject constructor(
     private fun loadInitialData() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
+
+            // Avatar yükleme
             val studentResult = studentRepository.getStudentProfile()
             val avatarId = if (studentResult.isSuccess) {
                 val avatarKey = studentResult.getOrNull()?.studentProfileAvatar ?: "turuncu"
@@ -64,16 +67,16 @@ class InstructorViewModel @Inject constructor(
                 R.drawable.ic_launcher_foreground
             }
 
+            // Fakülteleri çek ama SEÇME (selectedFaculty = null kalsın)
             val facultyResult = facultyRepository.getAllFaculties()
             if (facultyResult.isSuccess) {
                 val faculties = facultyResult.getOrNull() ?: emptyList()
-                val targetFaculty = faculties.find { it.facultyId == "fac_communication" } ?: faculties.firstOrNull()
 
                 _uiState.update {
                     it.copy(
                         isLoading = false,
                         facultyList = faculties,
-                        selectedFaculty = targetFaculty,
+                        selectedFaculty = null, // OTOMATİK SEÇİM YOK
                         userAvatarResId = avatarId
                     )
                 }
@@ -83,57 +86,64 @@ class InstructorViewModel @Inject constructor(
         }
     }
 
-    // --- EKLENEN KISIM: GLOBAL ARAMA FONKSİYONU ---
-    fun onCatalogSearch(query: String) {
-        if (query.isEmpty()) {
-            // Arama boşsa normal görünüme dön
-            _uiState.update { it.copy(isGlobalSearching = false, globalSearchResults = emptyList()) }
-            return
-        }
+    // Fakülte Seçim Dropdown'ını aç/kapa
+    fun toggleFacultyDropdown() {
+        _uiState.update { it.copy(isFacultyDropdownExpanded = !it.isFacultyDropdownExpanded) }
+    }
 
+    // Fakülte seçildiğinde çalışacak fonksiyon
+    fun onFacultySelected(faculty: Faculty) {
         viewModelScope.launch {
-            // Arama başladığı an durumu güncelle
-            _uiState.update { it.copy(isGlobalSearching = true, isLoading = true) }
+            _uiState.update {
+                it.copy(
+                    isLoading = true,
+                    selectedFaculty = faculty,
+                    isFacultyDropdownExpanded = false // Seçince listeyi kapat
+                )
+            }
 
-            // Repository'den arama yap
-            // Not: Firestore 'startAt' kullandığı için isimlerin baş harfiyle arama yapar (örn: "Ned" -> "Neda")
-            val result = instructorRepository.searchInstructors(query)
-
+            // Seçilen fakültenin departmanlarını getir
+            val result = facultyRepository.getDepartmentsByFaculty(faculty.facultyId)
             if (result.isSuccess) {
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        globalSearchResults = result.getOrNull() ?: emptyList()
+                        departmentList = result.getOrNull() ?: emptyList()
                     )
                 }
             } else {
-                _uiState.update { it.copy(isLoading = false, globalSearchResults = emptyList()) }
+                _uiState.update { it.copy(isLoading = false) }
             }
         }
     }
-    // ------------------------------------------------
 
-    fun toggleDepartments() {
-        val currentState = _uiState.value
-        val targetFaculty = currentState.selectedFaculty ?: return
+    // --- İŞTE EKSİK OLAN FONKSİYON BU ---
+    // Seçimi sıfırlayan (başa döndüren) fonksiyon
+    fun clearFacultySelection() {
+        _uiState.update {
+            it.copy(
+                selectedFaculty = null,       // Seçili fakülteyi kaldır
+                departmentList = emptyList(), // Departmanları temizle
+                isFacultyDropdownExpanded = false // Listeyi kapat
+            )
+        }
+    }
+    // -------------------------------------
 
-        if (currentState.isDepartmentsVisible) {
-            _uiState.update { it.copy(isDepartmentsVisible = false) }
-        } else {
-            viewModelScope.launch {
-                _uiState.update { it.copy(isLoading = true) }
-                val result = facultyRepository.getDepartmentsByFaculty(targetFaculty.facultyId)
-                if (result.isSuccess) {
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            departmentList = result.getOrNull() ?: emptyList(),
-                            isDepartmentsVisible = true
-                        )
-                    }
-                } else {
-                    _uiState.update { it.copy(isLoading = false) }
+    fun onCatalogSearch(query: String) {
+        if (query.isEmpty()) {
+            _uiState.update { it.copy(isGlobalSearching = false, globalSearchResults = emptyList()) }
+            return
+        }
+        viewModelScope.launch {
+            _uiState.update { it.copy(isGlobalSearching = true, isLoading = true) }
+            val result = instructorRepository.searchInstructors(query)
+            if (result.isSuccess) {
+                _uiState.update {
+                    it.copy(isLoading = false, globalSearchResults = result.getOrNull() ?: emptyList())
                 }
+            } else {
+                _uiState.update { it.copy(isLoading = false, globalSearchResults = emptyList()) }
             }
         }
     }
@@ -148,20 +158,15 @@ class InstructorViewModel @Inject constructor(
 
             if (instResult.isSuccess) {
                 val allInstructors = instResult.getOrNull() ?: emptyList()
-
-                // 1. Önce departmana göre filtrele
                 var filtered = allInstructors.filter { it.departmentIds.contains(departmentId) }
-
-                // 2. Eğer özel davetiye (targetInstructorId) varsa sadece o hocayı bırak
                 if (targetInstructorId != null) {
                     filtered = filtered.filter { it.instructorId == targetInstructorId }
                 }
-
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        instructorList = filtered,        // Tüm liste (departmandaki)
-                        filteredInstructorList = filtered, // Ekranda görünen liste
+                        instructorList = filtered,
+                        filteredInstructorList = filtered,
                         currentDepartmentName = departmentName
                     )
                 }
