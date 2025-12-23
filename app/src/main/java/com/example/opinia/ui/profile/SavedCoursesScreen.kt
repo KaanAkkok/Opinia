@@ -167,6 +167,9 @@ fun SavedCoursesScreen(
                 is SavedCoursesUiEvent.CoursesLoaded -> {
                     Log.d("SavedCoursesScreen", "Courses loaded: ${event.courses}")
                 }
+                is SavedCoursesUiEvent.CourseSavedOrUnsavedSuccessfully -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+                }
             }
         }
     }

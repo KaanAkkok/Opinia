@@ -5,10 +5,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -45,7 +46,7 @@ fun CustomCommentField(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(300.dp)
+            .heightIn(min = 300.dp)
             .clip(MaterialTheme.shapes.extraLarge)
             .background(OpinialightBlue)
             .padding(8.dp)
@@ -68,7 +69,9 @@ fun CustomCommentField(
             },
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = 60.dp),
+                .padding(bottom = 60.dp)
+                .wrapContentHeight(),
+            maxLines = Int.MAX_VALUE,
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,
                 unfocusedContainerColor = Color.Transparent,

@@ -267,6 +267,9 @@ fun CommentReviewScreen(navController: NavController, commentReviewViewModel: Co
                 is CommentReviewUiEvent.ErrorCreatingComment -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
                 }
+                is CommentReviewUiEvent.CourseSuccessfullySaved -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+                }
             }
         }
     }

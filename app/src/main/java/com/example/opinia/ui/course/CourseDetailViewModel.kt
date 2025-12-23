@@ -296,14 +296,20 @@ class CourseDetailViewModel @Inject constructor(
             val isCurrentlySaved = uiState.value.isCourseSaved
             val result = if (isCurrentlySaved) {
                 studentRepository.unsaveCourse(courseId)
-            }
-            else {
+            } else {
                 studentRepository.saveCourse(courseId)
             }
             if (result.isSuccess) {
-                _uiState.update { it.copy(isCourseSaved = !isCurrentlySaved) }
-            }
-            else {
+                _uiState.update {
+                    it.copy(isCourseSaved = !isCurrentlySaved)
+                }
+                val message = if (isCurrentlySaved) {
+                    "${uiState.value.courseCode} unsaved successfully"
+                } else {
+                    "${uiState.value.courseCode} saved successfully"
+                }
+                _uiEvent.send(CourseDetailUiEvent.Success(message))
+            } else {
                 _uiEvent.send(CourseDetailUiEvent.Error("Could not save course"))
             }
         }

@@ -30,6 +30,7 @@ data class CommentReviewUiState(
 )
 
 sealed class CommentReviewUiEvent {
+    data class CourseSuccessfullySaved(val message: String) : CommentReviewUiEvent()
     data object CommentSuccessfullyCreated : CommentReviewUiEvent()
     data class ErrorCreatingComment(val message: String) : CommentReviewUiEvent()
 }
@@ -168,7 +169,15 @@ class CommentReviewViewModel @Inject constructor(
                 studentRepository.saveCourse(courseId)
             }
             if (result.isSuccess) {
-                _uiState.update { it.copy(isCourseSaved = !isCurrentlySaved) }
+                _uiState.update {
+                    it.copy(isCourseSaved = !isCurrentlySaved)
+                }
+                val message = if (isCurrentlySaved) {
+                    "${uiState.value.courseCode} unsaved successfully"
+                } else {
+                    "${uiState.value.courseCode} saved successfully"
+                }
+                _uiEvent.send(CommentReviewUiEvent.CourseSuccessfullySaved(message))
             }
             else {
                 _uiEvent.send(CommentReviewUiEvent.ErrorCreatingComment("Could not save course"))

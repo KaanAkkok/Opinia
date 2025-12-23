@@ -27,6 +27,7 @@ data class SavedCoursesUiState(
 )
 
 sealed class SavedCoursesUiEvent {
+    data class CourseSavedOrUnsavedSuccessfully(val message: String) : SavedCoursesUiEvent()
     data class CoursesLoaded(val courses: List<Course>) : SavedCoursesUiEvent()
     data class ErrorLoadingCourses(val message: String) : SavedCoursesUiEvent()
 }
@@ -125,13 +126,15 @@ class SavedCoursesViewModel @Inject constructor(
     fun onToggleSaveCourse(courseId: String) {
         viewModelScope.launch {
             val currentUnsavedIds = _uiState.value.temporarilyUnsavedIds
-
+            val courseCode = originalCourseList.find { it.courseId == courseId }?.courseCode ?: ""
             if (currentUnsavedIds.contains(courseId)) {
                 val result = studentRepository.saveCourse(courseId)
                 if (result.isSuccess) {
                     _uiState.update { it.copy(
                         temporarilyUnsavedIds = it.temporarilyUnsavedIds - courseId
-                    )}
+                        )
+                    }
+                    _uiEvent.send(SavedCoursesUiEvent.CourseSavedOrUnsavedSuccessfully("${courseCode} saved successfully"))
                 } else {
                     _uiEvent.send(SavedCoursesUiEvent.ErrorLoadingCourses("Could not save course"))
                 }
@@ -140,7 +143,9 @@ class SavedCoursesViewModel @Inject constructor(
                 if (result.isSuccess) {
                     _uiState.update { it.copy(
                         temporarilyUnsavedIds = it.temporarilyUnsavedIds + courseId
-                    )}
+                        )
+                    }
+                    _uiEvent.send(SavedCoursesUiEvent.CourseSavedOrUnsavedSuccessfully("${courseCode} unsaved successfully"))
                 } else {
                     _uiEvent.send(SavedCoursesUiEvent.ErrorLoadingCourses("Could not unsave course"))
                 }
