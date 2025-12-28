@@ -2,12 +2,14 @@ package com.example.opinia.data.repository
 
 import android.util.Log
 import com.example.opinia.utils.NetworkManager
+import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.channels.awaitClose
@@ -44,6 +46,10 @@ class AuthRepository @Inject constructor(private val auth: FirebaseAuth, private
         }
     }
 
+    fun getCurrentUser(): FirebaseUser? {
+        return auth.currentUser
+    }
+
     suspend fun login(email: String, password: String): Result<Unit> {
         return try {
             if (!networkManager.isInternetAvailable()) {
@@ -69,7 +75,6 @@ class AuthRepository @Inject constructor(private val auth: FirebaseAuth, private
                 return Result.failure(Exception("No internet connection"))
             }
             auth.createUserWithEmailAndPassword(email, password).await()
-            auth.currentUser?.sendEmailVerification()?.await() // doğrulama maili gönderme (gerekli değil ise kaldıralım)
             Log.d(TAG, "Signup successful")
             return Result.success(Unit)
         } catch (e: Exception) {
@@ -80,6 +85,48 @@ class AuthRepository @Inject constructor(private val auth: FirebaseAuth, private
                 else -> "Unkown error"
             }
             Log.e(TAG, "Signup failed with error: $error")
+            Result.failure(Exception(error))
+        }
+    }
+
+    suspend fun sendVerificationEmail(email: String): Result<Unit> {
+        return try {
+            val user = auth.currentUser ?: return Result.failure(Exception("User not authenticated"))
+            if (!networkManager.isInternetAvailable()) {
+                return Result.failure(Exception("No internet connection"))
+            }
+            user.sendEmailVerification().await()
+            Log.d(TAG, "Verification email sent")
+            Result.success(Unit)
+        } catch (e: Exception) {
+            val error = when(e) {
+                is FirebaseAuthInvalidUserException -> "User not found with this email"
+                is FirebaseAuthInvalidCredentialsException -> "Invalid email format"
+                is FirebaseAuthUserCollisionException -> "This student email is already registered"
+                is FirebaseTooManyRequestsException -> "Too many requests. Try again later"
+                else -> "Unkown error"
+            }
+            Log.e(TAG, "Verification email failed: $error")
+            Result.failure(Exception(error))
+        }
+    }
+
+    suspend fun checkEmailVerification(): Result<Boolean> {
+        return try {
+            val user = auth.currentUser ?: return Result.failure(Exception("User not authenticated"))
+            if (!networkManager.isInternetAvailable()) {
+                return Result.failure(Exception("No internet connection"))
+            }
+            user.reload().await()
+            val isVerified = user.isEmailVerified
+            Log.d(TAG, "Email verification checked: $isVerified")
+            Result.success(isVerified)
+        } catch (e: Exception) {
+            val error = when(e) {
+                is FirebaseAuthInvalidUserException -> "User not found with this email"
+                else -> "Unkown error"
+            }
+            Log.e(TAG, "Email verification check failed: $error")
             Result.failure(Exception(error))
         }
     }
@@ -198,6 +245,16 @@ class AuthRepository @Inject constructor(private val auth: FirebaseAuth, private
             }
             Log.e(TAG, "Account deletion failed: $error")
             Result.failure(Exception(error))
+        }
+    }
+
+    suspend fun deleteUnverifiedUser() {
+        try {
+            val user = auth.currentUser ?: return
+            user.delete().await()
+            Log.d(TAG, "Unverified user deleted successfully")
+        } catch (e: Exception) {
+            Log.e(TAG, "Unverified user deletion failed: ${e.message}")
         }
     }
 }

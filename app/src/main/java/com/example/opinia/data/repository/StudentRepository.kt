@@ -32,6 +32,18 @@ class StudentRepository @Inject constructor(private val firestore: FirebaseFires
         }
     }
 
+    suspend fun checkIfStudentExists(studentId: String): Result<Boolean> {
+        return try {
+            val documentSnapshot = firestore.collection(collectionName).document(studentId).get().await()
+            val exists = documentSnapshot.exists()
+            Log.d(TAG, "Student check result: $exists")
+            Result.success(exists)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error checking student existence", e)
+            Result.failure(e)
+        }
+    }
+
     //oturum açmış olan kullanıcının öğrenci bilgilerini verir
     suspend fun getStudentProfile(): Result<Student?> {
         val uid = getCurrentUserId() ?: return Result.failure(Exception("User not logged in"))

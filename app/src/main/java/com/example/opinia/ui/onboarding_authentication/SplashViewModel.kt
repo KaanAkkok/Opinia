@@ -1,9 +1,10 @@
 package com.example.opinia.ui.onboarding_authentication
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.opinia.data.repository.AuthRepository
-import com.example.opinia.data.repository.AuthState
+import com.example.opinia.data.repository.StudentRepository
 import com.example.opinia.utils.NetworkManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -11,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 sealed class SplashUiState {
@@ -21,7 +23,11 @@ sealed class SplashUiState {
 }
 
 @HiltViewModel
-class SplashViewModel @Inject constructor(private val networkManager: NetworkManager, private val authRepository: AuthRepository) : ViewModel() {
+class SplashViewModel @Inject constructor(
+    private val networkManager: NetworkManager,
+    private val authRepository: AuthRepository,
+    private val studentRepository: StudentRepository
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow<SplashUiState>(SplashUiState.Loading)
     val uiState: StateFlow<SplashUiState> = _uiState.asStateFlow()
@@ -33,18 +39,38 @@ class SplashViewModel @Inject constructor(private val networkManager: NetworkMan
     fun checkAppStartConditions() {
         viewModelScope.launch {
             _uiState.value = SplashUiState.Loading
+            delay(1500)
             if (!networkManager.isInternetAvailable()) {
                 _uiState.value = SplashUiState.NoInternet
-                delay(5000) //5 saniye bekle
-                checkAppStartConditions()
                 return@launch
             }
-            authRepository.authState.collect { authState ->
-                _uiState.value = when (authState) {
-                    is AuthState.Authenticated -> SplashUiState.GoToDashboard
-                    is AuthState.Unauthenticated -> SplashUiState.GoToChooseLoginOrSignup
-                    is AuthState.Loading -> SplashUiState.Loading
+
+            val currentUser = authRepository.getCurrentUser()
+            if (currentUser == null) {
+                _uiState.value = SplashUiState.GoToChooseLoginOrSignup
+                return@launch
+            }
+            try {
+                currentUser.reload().await()
+                if (!currentUser.isEmailVerified) {
+                    Log.d("SplashVM", "Email not verified. Cleaning up.")
+                    currentUser.delete().await()
+                    _uiState.value = SplashUiState.GoToChooseLoginOrSignup
                 }
+                else {
+                    val hasProfile = studentRepository.checkIfStudentExists(currentUser.uid).getOrDefault(false)
+                    if (hasProfile) {
+                        _uiState.value = SplashUiState.GoToDashboard
+                    } else {
+                        Log.e("SplashVM", "Profile missing. Cleaning up.")
+                        currentUser.delete().await()
+                        _uiState.value = SplashUiState.GoToChooseLoginOrSignup
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("SplashVM", "Session check failed", e)
+                authRepository.logout()
+                _uiState.value = SplashUiState.GoToChooseLoginOrSignup
             }
         }
     }

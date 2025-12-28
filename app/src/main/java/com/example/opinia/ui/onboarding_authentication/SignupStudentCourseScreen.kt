@@ -41,6 +41,7 @@ import com.example.opinia.data.model.Course
 import com.example.opinia.ui.Destination
 import com.example.opinia.ui.components.CustomButton
 import com.example.opinia.ui.components.CustomCourseCard
+import com.example.opinia.ui.components.SignupDialog
 import com.example.opinia.ui.theme.NunitoFontFamily
 import com.example.opinia.ui.theme.OpiniaDeepBlue
 import com.example.opinia.ui.theme.OpinialightBlue
@@ -161,6 +162,20 @@ fun SignupStudentCourseScreen(navController: NavController, registerViewModel: R
         }
     }
 
+    if (uiState.isWaitingForEmailVerification) {
+        SignupDialog(
+            email = uiState.email,
+            onDismissRequest = { registerViewModel.cancelRegistration() },
+            isResendEnabled = uiState.isResendButtonEnabled,
+            cooldown = uiState.resendCooldown,
+            onWrongEmailClick = {
+                registerViewModel.onWrongEmailClicked()
+                navController.popBackStack(Destination.SIGNUP_PERSONAL_INFO.route, inclusive = false)
+            },
+            onResendClick = { registerViewModel.resendVerificationEmail() }
+        )
+    }
+
     SignupStudentCourseContent(
         courses = uiState.availableCourses,
         selectedCourses = uiState.selectedCourses,
@@ -170,7 +185,7 @@ fun SignupStudentCourseScreen(navController: NavController, registerViewModel: R
                 registerViewModel.completeRegistration()
             } else {
                 // Ders seçilmediyse kullanıcıyı uyar
-                Toast.makeText(context, "Lütfen en az bir ders seçiniz.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Please select at least one course", Toast.LENGTH_SHORT).show()
             }
         }
     )
