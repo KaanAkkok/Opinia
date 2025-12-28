@@ -52,7 +52,7 @@ class SplashViewModel @Inject constructor(
             }
             try {
                 currentUser.reload().await()
-                if (!currentUser.isEmailVerified) {
+                if (!currentUser.isEmailVerified && currentUser.email != "admin@std.yeditepe.edu.tr") { //admin için arka kapı
                     Log.d("SplashVM", "Email not verified. Cleaning up.")
                     currentUser.delete().await()
                     _uiState.value = SplashUiState.GoToChooseLoginOrSignup

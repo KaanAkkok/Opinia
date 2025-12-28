@@ -184,13 +184,15 @@ fun DashboardContent(
                         .padding(12.dp),
                     horizontalAlignment = Alignment.Start
                 ){
+                    Spacer(modifier = Modifier.height(10.dp))
+
                     Text(
                         text = "My Courses",
                         color = black,
                         fontFamily = NunitoFontFamily,
-                        fontWeight = FontWeight.SemiBold,
+                        fontWeight = FontWeight.Bold,
                         fontSize = 15.sp,
-                        modifier = Modifier.padding(start = 10.dp)
+                        modifier = Modifier.padding(start = 12.dp)
                     )
 
                     Spacer(modifier = Modifier.height(10.dp))
@@ -225,6 +227,7 @@ fun DashboardContent(
                             }
                         }
                     }
+                    Spacer(modifier = Modifier.height(3.dp))
                 }
                 Spacer(modifier = Modifier.height(80.dp))
             }

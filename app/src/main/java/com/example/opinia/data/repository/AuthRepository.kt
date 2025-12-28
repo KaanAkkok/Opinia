@@ -56,6 +56,12 @@ class AuthRepository @Inject constructor(private val auth: FirebaseAuth, private
                 return Result.failure(Exception("No internet connection"))
             }
             auth.signInWithEmailAndPassword(email, password).await()
+            val user = auth.currentUser
+            if (user != null && !user.isEmailVerified && email != "admin@std.yeditepe.edu.tr") {  //admin için arka kapı
+                auth.signOut()
+                Log.d(TAG, "Login blocked: Email not verified")
+                return Result.failure(Exception("Email not verified"))
+            }
             Log.d(TAG, "Login successful")
             return Result.success(Unit)
         } catch (e: Exception) {

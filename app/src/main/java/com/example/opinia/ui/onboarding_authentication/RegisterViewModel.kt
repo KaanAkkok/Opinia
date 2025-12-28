@@ -271,15 +271,21 @@ class RegisterViewModel @Inject constructor(
             }
             val authResult = authRepository.signup(state.email, state.password)
             if (authResult.isSuccess) {
-                authRepository.sendVerificationEmail(state.email)
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        isWaitingForEmailVerification = true
-                    )
+                if (state.email != "admin@std.yeditepe.edu.tr") { //admin için arka kapı
+                    authRepository.sendVerificationEmail(state.email)
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            isWaitingForEmailVerification = true
+                        )
+                    }
+                    startResendTimer()
+                    startEmailVerificationCheck()
                 }
-                startResendTimer()
-                startEmailVerificationCheck()
+                else {
+                    saveStudentToFirestore()
+                    _uiEvent.send(RegisterUiEvent.SignupSuccess)
+                }
             }
             else {
                 _uiState.update {
