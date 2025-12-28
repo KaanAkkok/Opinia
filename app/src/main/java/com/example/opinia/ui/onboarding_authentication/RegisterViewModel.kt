@@ -13,11 +13,14 @@ import com.example.opinia.data.repository.FacultyDepartmentRepository
 import com.example.opinia.data.repository.StudentRepository
 import com.example.opinia.utils.NetworkManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,6 +32,9 @@ data class RegisterUiState(
     val password: String = "",
     val passwordDummy: String = "",
     val selectedAvatarId: String = "",
+    val isWaitingForEmailVerification: Boolean = false,
+    val isResendButtonEnabled: Boolean = true,
+    val resendCooldown: Int = 0,
     // sayfa 3 akademik bilgiler
     val availableFaculties: List<Faculty> = emptyList(), // backendden gelecek liste
     val selectedFaculty: Faculty? = null,
@@ -62,6 +68,9 @@ class RegisterViewModel @Inject constructor(
 
     private val _uiEvent = Channel<RegisterUiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
+
+    private var verificationJob: Job? = null
+    private var resendTimerJob: Job? = null
 
     val allAvatars = avatarProvider.avatars //buradan avatarlara erişebiliriz
 
@@ -131,7 +140,7 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-    // 3. Departman Seçilince -> Dersleri Getir (4. Sayfa Hazırlığı)
+    // 3. Departman Seçilince -> Dersleri Getir
     fun onDepartmentSelected(department: Department) {
         _uiState.update {
             it.copy(
@@ -161,7 +170,6 @@ class RegisterViewModel @Inject constructor(
     }
 
     // 3. sayfa update fonksiyonu
-    // Checkbox
     fun onCourseSelected(course: Course) {
         _uiState.update { currentState ->
             val updatedList = if (currentState.selectedCourses.contains(course)) {
@@ -263,40 +271,160 @@ class RegisterViewModel @Inject constructor(
             }
             val authResult = authRepository.signup(state.email, state.password)
             if (authResult.isSuccess) {
-                val uid = studentRepository.getCurrentUserId()
-                if (uid != null) {
-                    val newStudent = Student(
-                        studentId = uid,
-                        studentEmail = state.email,
-                        studentName = state.name,
-                        studentSurname = state.surname,
-                        studentYear = state.selectedStdYear,
-                        facultyID = state.selectedFaculty?.facultyId ?: "",
-                        departmentID = state.selectedDepartment?.departmentId ?: "",
-                        studentProfileAvatar = state.selectedAvatarId,
-                        enrolledCourseIds = state.selectedCourses.map { it.courseId }, // Sadece ID'leri kaydediyoruz
-                        savedCourseIds = emptyList()
+                authRepository.sendVerificationEmail(state.email)
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        isWaitingForEmailVerification = true
                     )
-                    val dbResult = studentRepository.createStudent(newStudent)
-                    if (dbResult.isSuccess) {
-                        _uiEvent.send(RegisterUiEvent.SignupSuccess)
-                    } else {
-                        com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.delete()
-                        _uiEvent.send(RegisterUiEvent.SignupError("Student register failed: ${dbResult.exceptionOrNull()?.message}"))
-                    }
                 }
-                else {
-                    _uiEvent.send(RegisterUiEvent.SignupError("Student ID not found"))
-                }
+                startResendTimer()
+                startEmailVerificationCheck()
             }
             else {
+                _uiState.update {
+                    it.copy(isLoading = false)
+                }
                 _uiEvent.send(RegisterUiEvent.SignupError(authResult.exceptionOrNull()?.message ?: "Unknown error"))
             }
 
-            _uiState.update {
-                it.copy(isLoading = false)
-            }
+        }
+    }
 
+    private fun startEmailVerificationCheck() {
+        verificationJob?.cancel()
+        verificationJob = viewModelScope.launch {
+            val timeOut = 5*60*1000L
+            val startTime = System.currentTimeMillis()
+            while(isActive) {
+                if(System.currentTimeMillis() - startTime > timeOut) {
+                    handleRegistrationFailure("Email verification timeout")
+                    break
+                }
+                delay(3000)
+                val isVerified = authRepository.checkEmailVerification().getOrDefault(false)
+                if (isVerified) {
+                    _uiState.update {
+                        it.copy(
+                            isWaitingForEmailVerification = false
+                        )
+                    }
+                    saveStudentToFirestore()
+                    break
+                }
+            }
+        }
+    }
+
+    private suspend fun saveStudentToFirestore() {
+        _uiState.update {
+            it.copy(
+                isLoading = true
+            )
+        }
+
+        val state = uiState.value
+        val uid = studentRepository.getCurrentUserId()
+
+        if (uid != null) {
+            val newStudent = Student(
+                studentId = uid,
+                studentEmail = state.email.trim(),
+                studentName = state.name.trim(),
+                studentSurname = state.surname.trim(),
+                studentYear = state.selectedStdYear,
+                facultyID = state.selectedFaculty?.facultyId ?: "",
+                departmentID = state.selectedDepartment?.departmentId ?: "",
+                studentProfileAvatar = state.selectedAvatarId,
+                enrolledCourseIds = state.selectedCourses.map { it.courseId }, // Sadece ID'leri kaydediyoruz
+                savedCourseIds = emptyList()
+            )
+            val dbResult = studentRepository.createStudent(newStudent)
+            if (dbResult.isSuccess) {
+                _uiEvent.send(RegisterUiEvent.SignupSuccess)
+            } else {
+                com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.delete()
+                _uiEvent.send(RegisterUiEvent.SignupError("Student register failed: ${dbResult.exceptionOrNull()?.message}"))
+            }
+        }
+        else {
+            _uiEvent.send(RegisterUiEvent.SignupError("Student ID not found"))
+        }
+
+        _uiState.update { it.copy(isLoading = false) }
+    }
+
+    private suspend fun handleRegistrationFailure(msg: String) {
+        verificationJob?.cancel()
+        _uiState.update {
+            it.copy(isLoading = true)
+        }
+        authRepository.deleteUnverifiedUser()
+        _uiState.update {
+            it.copy(
+                isLoading = false,
+                isWaitingForEmailVerification = false
+            )
+        }
+        _uiEvent.send(RegisterUiEvent.SignupError(msg))
+    }
+
+    // email ekranına geri yolla
+    fun onWrongEmailClicked() {
+        viewModelScope.launch {
+            verificationJob?.cancel()
+            _uiState.update {
+                it.copy(
+                    isLoading = true
+                )
+            }
+            try {
+                authRepository.deleteUnverifiedUser()
+            } catch (e: Exception) {
+                _uiEvent.send(RegisterUiEvent.SignupError(e.message ?: "Failed to delete unverified user"))
+            }
+            _uiState.update {
+                it.copy(
+                    isLoading = false,
+                    isWaitingForEmailVerification = false
+                )
+            }
+        }
+    }
+
+    fun cancelRegistration() {
+        viewModelScope.launch {
+            verificationJob?.cancel()
+            handleRegistrationFailure("Registration canceled")
+        }
+    }
+
+    fun resendVerificationEmail() {
+        viewModelScope.launch {
+            if (!uiState.value.isResendButtonEnabled) return@launch
+            val result = authRepository.sendVerificationEmail(email = uiState.value.email)
+            if (result.isSuccess) {
+                _uiEvent.send(RegisterUiEvent.SignupError("Verification email sent again!"))
+            } else {
+                val errorMsg = result.exceptionOrNull()?.message ?: "Failed to resend email"
+                _uiEvent.send(RegisterUiEvent.SignupError(errorMsg))
+            }
+        }
+    }
+
+    private fun startResendTimer() {
+        resendTimerJob?.cancel()
+        resendTimerJob = viewModelScope.launch {
+            _uiState.update {
+                it.copy(isResendButtonEnabled = false, resendCooldown = 60)
+            }
+            for (i in 60 downTo 1) {
+                delay(1000)
+                _uiState.update { it.copy(resendCooldown = i - 1) }
+            }
+            _uiState.update {
+                it.copy(isResendButtonEnabled = true, resendCooldown = 0)
+            }
         }
     }
 
