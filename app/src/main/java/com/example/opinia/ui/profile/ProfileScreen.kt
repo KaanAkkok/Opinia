@@ -6,7 +6,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,7 +18,6 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -50,7 +48,6 @@ import com.example.opinia.ui.theme.OpiniaDeepBlue
 import com.example.opinia.ui.theme.OpiniaGreyWhite
 import com.example.opinia.ui.theme.OpinialightBlue
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileContent(
@@ -58,6 +55,7 @@ fun ProfileContent(
     onSavedCoursesClicked: () -> Unit,
     onAddCoursesClicked: () -> Unit,
     onChangeProfileClicked: () -> Unit,
+    onChangeAcademicInfoClicked: () -> Unit,
     onChangePasswordClicked: () -> Unit,
     onSupportClicked: () -> Unit,
     onDeleteClicked: (String) -> Unit,
@@ -138,7 +136,22 @@ fun ProfileContent(
 
             CustomButton(
                 onClick = { onChangeProfileClicked() },
-                text = "Change Profile",
+                text = "Change Avatar Picture",
+                shape = MaterialTheme.shapes.extraLarge,
+                textStyle = MaterialTheme.typography.titleSmall,
+                containerColor = OpiniaDeepBlue,
+                contentColor = OpinialightBlue,
+                modifier = Modifier
+                    .height(36.dp)
+                    .width(270.dp),
+                fontSize = 15
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            CustomButton(
+                onClick = { onChangeAcademicInfoClicked() },
+                text = "Change Academic Info",
                 shape = MaterialTheme.shapes.extraLarge,
                 textStyle = MaterialTheme.typography.titleSmall,
                 containerColor = OpiniaDeepBlue,
@@ -179,47 +192,7 @@ fun ProfileContent(
                 fontSize = 15
             )
 
-            Spacer(modifier = Modifier.height(28.dp))
-
-            /*
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                CustomButton(
-                    onClick = { /* TODO: Handle Turkish language selection */ },
-                    text = "TR",
-                    shape = MaterialTheme.shapes.medium,
-                    textStyle = MaterialTheme.typography.titleSmall,
-                    containerColor = OpiniaDeepBlue,
-                    contentColor = OpinialightBlue,
-                    modifier = Modifier
-                        .height(40.dp)
-                        .width(100.dp),
-                    fontSize = 16
-                )
-
-                Spacer(modifier = Modifier.width(27.dp))
-
-                Text("|", style = MaterialTheme.typography.titleLarge.copy(fontSize = 48.sp), color = OpinialightBlue)
-
-                Spacer(modifier = Modifier.width(27.dp))
-
-                CustomButton(
-                    onClick = { /* TODO: Handle English language selection */ },
-                    text = "ENG",
-                    shape = MaterialTheme.shapes.medium,
-                    textStyle = MaterialTheme.typography.titleSmall,
-                    containerColor = OpiniaDeepBlue,
-                    contentColor = OpinialightBlue,
-                    modifier = Modifier
-                        .height(40.dp)
-                        .width(100.dp),
-                    fontSize = 16
-                )
-            }
-            */
-
-            Spacer(modifier = Modifier.height(48.dp))
+            Spacer(modifier = Modifier.height(42.dp))
 
             CustomButton(
                 onClick = onLogoutClicked,
@@ -266,7 +239,6 @@ fun ProfileContent(
 @Composable
 fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewModel) {
 
-    val uiState by profileViewModel.uiState.collectAsState()
     val context = LocalContext.current
 
     val view = LocalView.current
@@ -309,6 +281,7 @@ fun ProfileScreen(navController: NavController, profileViewModel: ProfileViewMod
         onSavedCoursesClicked = { navController.navigate(Destination.STUDENT_SAVED_COURSES.route) },
         onAddCoursesClicked = { navController.navigate(Destination.STUDENT_ADD_COURSE1.route) },
         onChangeProfileClicked = { navController.navigate(Destination.STUDENT_CHANGE_AVATAR.route) },
+        onChangeAcademicInfoClicked = { navController.navigate(Destination.STUDENT_CHANGE_STUDENT_INFO.route) },
         onChangePasswordClicked = { navController.navigate(Destination.STUDENT_CHANGE_PASSWORD.route) },
         onSupportClicked = { navController.navigate(Destination.SUPPORT.route) },
         onDeleteClicked = { password ->
@@ -326,6 +299,7 @@ fun ProfileScreenPreview() {
         onSavedCoursesClicked = {},
         onAddCoursesClicked = {},
         onChangeProfileClicked = {},
+        onChangeAcademicInfoClicked = {},
         onChangePasswordClicked = {},
         onSupportClicked = {},
         onDeleteClicked = {},

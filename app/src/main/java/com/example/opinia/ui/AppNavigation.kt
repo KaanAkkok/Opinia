@@ -42,6 +42,8 @@ import com.example.opinia.ui.instructor.InstructorCatalogScreen
 import com.example.opinia.ui.instructor.InstructorListScreen
 import com.example.opinia.ui.profile.ChangePasswordScreen
 import com.example.opinia.ui.profile.ChangePasswordViewModel
+import com.example.opinia.ui.profile.ChangeStudentInfoScreen
+import com.example.opinia.ui.profile.ChangeStudentInfoViewModel
 import com.example.opinia.ui.profile.SupportScreen
 import com.example.opinia.ui.profile.SupportViewModel
 import com.example.opinia.ui.search.SearchViewModel
@@ -65,6 +67,7 @@ enum class Destination(val route: String) {
     INSTRUCTOR_LIST("instructor_list/{departmentName}?targetInstructorId={targetInstructorId}"),
     STUDENT_SAVED_COURSES("student_saved_courses"),
     STUDENT_CHANGE_AVATAR("student_change_avatar"),
+    STUDENT_CHANGE_STUDENT_INFO("student_change_student_info"),
     STUDENT_CHANGE_PASSWORD("student_change_password"),
     STUDENT_ADD_COURSE1("student_add_course1"),
     SUPPORT("support"),
@@ -141,6 +144,11 @@ fun AppNavigation(modifier: Modifier = Modifier) {
             composable(Destination.STUDENT_CHANGE_AVATAR.route) {
                 val changeAvatarViewModel: ChangeAvatarViewModel = hiltViewModel()
                 ChangeAvatarScreen(navController, changeAvatarViewModel)
+            }
+
+            composable(Destination.STUDENT_CHANGE_STUDENT_INFO.route) {
+                val changeStudentInfoViewModel: ChangeStudentInfoViewModel = hiltViewModel()
+                ChangeStudentInfoScreen(navController, changeStudentInfoViewModel)
             }
 
             composable(Destination.STUDENT_CHANGE_PASSWORD.route) {
