@@ -10,6 +10,7 @@ import com.example.opinia.data.repository.StudentRepository
 import com.example.opinia.utils.NetworkManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -135,6 +136,8 @@ class SavedCoursesViewModel @Inject constructor(
                         )
                     }
                     _uiEvent.send(SavedCoursesUiEvent.CourseSavedOrUnsavedSuccessfully("${courseCode} saved successfully"))
+                    delay(5000L)
+                    loadSavedCourses()
                 } else {
                     _uiEvent.send(SavedCoursesUiEvent.ErrorLoadingCourses("Could not save course"))
                 }
@@ -146,6 +149,8 @@ class SavedCoursesViewModel @Inject constructor(
                         )
                     }
                     _uiEvent.send(SavedCoursesUiEvent.CourseSavedOrUnsavedSuccessfully("${courseCode} unsaved successfully"))
+                    delay(5000L)
+                    loadSavedCourses()
                 } else {
                     _uiEvent.send(SavedCoursesUiEvent.ErrorLoadingCourses("Could not unsave course"))
                 }

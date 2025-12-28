@@ -105,16 +105,20 @@ fun SavedCoursesContent(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            LazyColumn(
-                state = listState,
-                modifier = Modifier
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(bottom = 8.dp)
-            ) { items(
-                items = savedCourses,
-                key = { it.courseId }
-            ) { course ->
+            if (savedCourses.isEmpty()) {
+                Text("No saved courses found", color = black.copy(alpha = 0.6f), modifier = Modifier.padding(horizontal = 8.dp))
+            }
+            else {
+                LazyColumn(
+                    state = listState,
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(bottom = 8.dp)
+                ) { items(
+                    items = savedCourses,
+                    key = { it.courseId }
+                ) { course ->
                     val isSaved = !temporarilyUnsavedIds.contains(course.courseId)
                     CustomCourseCard(
                         course = course,
@@ -134,6 +138,7 @@ fun SavedCoursesContent(
                         codeStyle = SpanStyle(fontFamily = WorkSansFontFamily, fontWeight = FontWeight.Normal, fontSize = 15.sp),
                         nameStyle = SpanStyle(fontFamily = WorkSansFontFamily, fontWeight = FontWeight.Normal, fontSize = 15.sp)
                     )
+                }
                 }
             }
         }

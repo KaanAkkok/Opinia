@@ -343,7 +343,7 @@ class RegisterViewModel @Inject constructor(
                 departmentID = state.selectedDepartment?.departmentId ?: "",
                 studentProfileAvatar = state.selectedAvatarId,
                 enrolledCourseIds = state.selectedCourses.map { it.courseId }, // Sadece ID'leri kaydediyoruz
-                savedCourseIds = emptyList()
+                savedCourseIds = state.selectedCourses.map { it.courseId } //seçtiği dersleri otomatik kaydediyoruz
             )
             val dbResult = studentRepository.createStudent(newStudent)
             if (dbResult.isSuccess) {
