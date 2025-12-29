@@ -45,12 +45,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import com.example.opinia.R
 import com.example.opinia.ui.Destination
 import com.example.opinia.ui.component.BottomNavBar
 import com.example.opinia.ui.components.CustomCommentField
 import com.example.opinia.ui.components.CustomTopAppBar
+import com.example.opinia.ui.components.OnLifeCycleEvent
 import com.example.opinia.ui.search.GeneralSearchBar
 import com.example.opinia.ui.search.SearchViewModel
 import com.example.opinia.ui.theme.NunitoFontFamily
@@ -257,6 +259,16 @@ fun CommentReviewScreen(navController: NavController, commentReviewViewModel: Co
     val uiState by commentReviewViewModel.uiState.collectAsState()
     val context = LocalContext.current
 
+    OnLifeCycleEvent { event ->
+        if (event == Lifecycle.Event.ON_RESUME) {
+            commentReviewViewModel.loadAllData()
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        commentReviewViewModel.checkEligibility(uiState.courseId)
+    }
+
     LaunchedEffect(key1 = true) {
         commentReviewViewModel.uiEvent.collect { event ->
             when (event) {
@@ -266,6 +278,9 @@ fun CommentReviewScreen(navController: NavController, commentReviewViewModel: Co
                 }
                 is CommentReviewUiEvent.ErrorCreatingComment -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+                }
+                is CommentReviewUiEvent.NavigateBack -> {
+                    navController.popBackStack()
                 }
                 is CommentReviewUiEvent.CourseSuccessfullySaved -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()

@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -60,9 +61,7 @@ class DashboardViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
-        fetchStudentDetail()
-        fetchPopularCourses()
-        fetchCurrentStudentCourses()
+        loadAllData()
     }
 
     private fun fetchStudentDetail() {
@@ -181,19 +180,34 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
-    suspend fun refreshComments() {
-        if (!networkManager.isInternetAvailable()) {
-            _uiEvent.send(DashboardUiEvent.DashboardUiEventError("No internet connection"))
-            return
+    fun refreshComments() {
+        viewModelScope.launch {
+            if (!networkManager.isInternetAvailable()) {
+                _uiEvent.send(DashboardUiEvent.DashboardUiEventError("No internet connection"))
+                return@launch
+            }
+            _uiState.update {
+                it.copy(
+                    courses = emptyList(),
+                    CurrentStudentCourses = emptyList()
+                )
+            }
+            delay(500)
+            fetchPopularCourses()
+            fetchCurrentStudentCourses()
         }
-        _uiState.update {
-            it.copy(
-                courses = emptyList(),
-                CurrentStudentCourses = emptyList()
+    }
+
+    fun loadAllData() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+            val jobs = listOf(
+                launch { fetchStudentDetail() },
+                launch { fetchPopularCourses() },
+                launch { fetchCurrentStudentCourses() }
             )
+            jobs.joinAll()
+            _uiState.update { it.copy(isLoading = false) }
         }
-        delay(500)
-        fetchPopularCourses()
-        fetchCurrentStudentCourses()
     }
 }

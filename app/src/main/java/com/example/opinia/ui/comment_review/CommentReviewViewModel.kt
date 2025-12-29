@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -32,6 +33,7 @@ data class CommentReviewUiState(
 sealed class CommentReviewUiEvent {
     data class CourseSuccessfullySaved(val message: String) : CommentReviewUiEvent()
     data object CommentSuccessfullyCreated : CommentReviewUiEvent()
+    data object NavigateBack : CommentReviewUiEvent()
     data class ErrorCreatingComment(val message: String) : CommentReviewUiEvent()
 }
 
@@ -121,11 +123,25 @@ class CommentReviewViewModel @Inject constructor(
         }
     }
 
+    fun checkEligibility(courseId: String) {
+        viewModelScope.launch {
+            val isEnrolled = studentRepository.checkIfStudentEnrolledInCourse(courseId).getOrDefault(true)
+            if (!isEnrolled) {
+                _uiEvent.send(CommentReviewUiEvent.ErrorCreatingComment("You are not enrolled in this course"))
+                _uiEvent.send(CommentReviewUiEvent.NavigateBack)
+            }
+        }
+    }
+
     fun submitCommentReview() {
         val state = _uiState.value
         viewModelScope.launch {
             if (!networkManager.isInternetAvailable()) {
                 _uiEvent.send(CommentReviewUiEvent.ErrorCreatingComment("No internet connection"))
+                return@launch
+            }
+            if (!studentRepository.checkIfStudentEnrolledInCourse(courseId).getOrDefault(true)) {
+                _uiEvent.send(CommentReviewUiEvent.ErrorCreatingComment("You are not enrolled in this course"))
                 return@launch
             }
             if (state.comment.isBlank()) {
@@ -192,6 +208,19 @@ class CommentReviewViewModel @Inject constructor(
                 comment = "",
                 isLoading = false,
             )
+        }
+    }
+
+    fun loadAllData() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+            val jobs = listOf(
+                launch { fetchStudentAvatarId() },
+                launch { fetchCourseDetails() },
+                launch { checkIfCourseSaved() }
+            )
+            jobs.joinAll()
+            _uiState.update { it.copy(isLoading = false) }
         }
     }
 }

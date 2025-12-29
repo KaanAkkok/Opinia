@@ -169,6 +169,25 @@ class StudentRepository @Inject constructor(private val firestore: FirebaseFires
         }
     }
 
+    //öğrencinin ilgili derse enroll olup olmadığını kontrol eder
+    suspend fun checkIfStudentEnrolledInCourse(courseId: String): Result<Boolean> {
+        val uid = getCurrentUserId() ?: return Result.failure(Exception("User not logged in"))
+        return try {
+            val result = firestore.collection(collectionName).document(uid).get().await()
+            val enrolledCourseIds = result.get("enrolledCourseIds") as? List<String> ?: emptyList()
+            if (courseId in enrolledCourseIds) {
+                Log.d(TAG, "Student is enrolled in the course")
+                Result.success(true)
+            } else {
+                Log.d(TAG, "Student is not enrolled in the course")
+                Result.success(false)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error checking student enrollment", e)
+            Result.failure(e)
+        }
+    }
+
     //öğrenciyi dersden çıkarır
     suspend fun dropStudentFromCourse(courseId: String): Result<Unit> {
         val uid = getCurrentUserId() ?: return Result.failure(Exception("User not logged in"))

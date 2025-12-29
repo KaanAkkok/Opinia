@@ -56,6 +56,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.opinia.R
@@ -64,6 +65,7 @@ import com.example.opinia.ui.Destination
 import com.example.opinia.ui.component.BottomNavBar
 import com.example.opinia.ui.components.CustomCommentCard
 import com.example.opinia.ui.components.CustomTopAppBar
+import com.example.opinia.ui.components.OnLifeCycleEvent
 import com.example.opinia.ui.components.RatingSummarySection
 import com.example.opinia.ui.search.GeneralSearchBar
 import com.example.opinia.ui.search.SearchViewModel
@@ -303,6 +305,12 @@ fun CourseDetailScreen(navController: NavController, courseDetailViewModel: Cour
             val window = (view.context as Activity).window
             window.statusBarColor = android.graphics.Color.WHITE
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = true
+        }
+    }
+
+    OnLifeCycleEvent { event ->
+        if (event == Lifecycle.Event.ON_RESUME) {
+            courseDetailViewModel.loadAllData()
         }
     }
 

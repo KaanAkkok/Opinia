@@ -74,7 +74,7 @@ class CourseDetailViewModel @Inject constructor(
         loadAllData()
     }
 
-    private fun loadAllData() {
+    fun loadAllData() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             val jobs = listOf(
