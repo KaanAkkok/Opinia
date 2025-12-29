@@ -170,17 +170,12 @@ fun DashboardContent(
                 else {
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    if(popularCourses.isEmpty()) {
-                        Text("No popular courses found", color = black.copy(alpha = 0.6f))
-                    }
-                    else {
-                        CustomPopularCourseCard(
-                            Courses = popularCourses,
-                            onCourseClick = { courseId ->
-                                controller.navigate(Destination.COURSE_DETAIL.route.replace("{courseId}", courseId))
-                            }
-                        )
-                    }
+                    CustomPopularCourseCard(
+                        Courses = popularCourses,
+                        onCourseClick = { courseId ->
+                            controller.navigate(Destination.COURSE_DETAIL.route.replace("{courseId}", courseId))
+                        }
+                    )
 
                     Spacer(modifier = Modifier.height(24.dp))
 
