@@ -290,14 +290,13 @@ fun CourseCatalogScreen1(navController: NavController, courseCatalogViewModel: C
             avatarResId = uiState.avatarResId ?: R.drawable.turuncu,
             onAvatarClick = { navController.navigate(Destination.STUDENT_PROFILE.route) },
             controller = navController,
-            query = uiState.searchQuery,
-            onQueryChange = courseCatalogViewModel::onSearchQueryChanged,
             departmentName = uiState.selectedDepartment?.departmentName ?: "",
             courses = uiState.courses,
             onBackClick = { courseCatalogViewModel.onBackToSelection() },
             onCourseClicked = { course ->
                 navController.navigate("course_detail/${course.courseId}")
-            }
+            },
+            searchViewModel = searchViewModel
         )
     }
 }

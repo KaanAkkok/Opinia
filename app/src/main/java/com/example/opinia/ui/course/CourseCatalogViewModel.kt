@@ -151,6 +151,8 @@ class CourseCatalogViewModel @Inject constructor(
         }
     }
 
+    /*
+    EĞER ESKİ SEARCHBAR KULLANILACAKSA BUNU KULLAN
     fun onSearchQueryChanged(query: String) {
         _uiState.update { it.copy(searchQuery = query) }
         val currentStep = _uiState.value.step
@@ -177,5 +179,6 @@ class CourseCatalogViewModel @Inject constructor(
             }
         }
     }
+    */
 
 }
