@@ -223,7 +223,8 @@ class RegisterViewModel @Inject constructor(
             return false
         }
         if (!validatePassword(state.password)) {
-            sendErrorEvent("Password must be 8+ chars, with at least 1 number, 1 uppercase and 1 lowercase letter, and no spaces")
+            val errorMsg = "Password must be 8+ chars, 1 number, 1 uppercase, 1 lowercase & no spaces."
+            sendErrorEvent(errorMsg)
             return false
         }
         if (state.password != state.passwordDummy) {
@@ -343,7 +344,7 @@ class RegisterViewModel @Inject constructor(
                 departmentID = state.selectedDepartment?.departmentId ?: "",
                 studentProfileAvatar = state.selectedAvatarId,
                 enrolledCourseIds = state.selectedCourses.map { it.courseId }, // Sadece ID'leri kaydediyoruz
-                savedCourseIds = state.selectedCourses.map { it.courseId } //seçtiği dersleri otomatik kaydediyoruz
+                savedCourseIds = emptyList() // Başlangıçta boş bir liste
             )
             val dbResult = studentRepository.createStudent(newStudent)
             if (dbResult.isSuccess) {

@@ -67,7 +67,7 @@ fun SignupStudentCourseContent(
         Spacer(modifier = Modifier.height(48.dp))
 
         Image(
-            painter = painterResource(id = R.drawable.yeni_acikmavi_logo),
+            painter = painterResource(id = R.drawable.yeni_acik_amblem),
             contentDescription = "Logo",
             modifier = Modifier
                 .width(210.dp)
@@ -153,7 +153,7 @@ fun SignupStudentCourseScreen(navController: NavController, registerViewModel: R
                 }
                 is RegisterUiEvent.SignupSuccess -> {
                     Toast.makeText(context, "Signup Success", Toast.LENGTH_SHORT).show()
-                    navController.navigate(Destination.DASHBOARD.route) {
+                    navController.navigate(Destination.LOGIN.route) {
                         popUpTo(Destination.CHOOSE_LOGIN_OR_SIGNUP.route) { inclusive = true }
                     }
                 }

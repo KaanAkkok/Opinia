@@ -55,15 +55,28 @@ class LoginViewModel @Inject constructor(private val authRepository: AuthReposit
         return true
     }
 
+    fun validatePassword(password: String): Boolean {
+        val hasMinLength = password.length >= 8
+        val hasNumber = password.contains(Regex("[0-9]"))
+        val hasUpperCase = password.contains(Regex("[A-Z]"))
+        val hasLowerCase = password.contains(Regex("[a-z]"))
+        val noSpaces = !password.contains(" ")
+        return hasMinLength && hasNumber && hasUpperCase && hasLowerCase && noSpaces
+    }
+
     suspend fun loginUserUseCases(email: String, password: String): Result<Unit> {
         if (!networkManager.isInternetAvailable()) {
             return Result.failure(Exception("No internet connection"))
         }
         if (email.isBlank() || password.isBlank()) {
-            return Result.failure(Exception("Please enter email or password"))
+            return Result.failure(Exception("Please enter email and password"))
         }
         if (!validateStudentEmail(email)) {
             return Result.failure(Exception("Please enter a valid student email"))
+        }
+        if (!validatePassword(password)) {
+            val errorMsg = "Password must be 8+ chars, 1 number, 1 uppercase, 1 lowercase & no spaces."
+            return Result.failure(Exception(errorMsg))
         }
         return authRepository.login(email, password)
     }

@@ -59,7 +59,7 @@ fun ChooseLoginOrSignupContent(
     ) {
 
         Image(
-            painter = painterResource(id = R.drawable.yeni_acikmavi_logo),
+            painter = painterResource(id = R.drawable.yeni_acik_amblem),
             contentDescription = "Logo",
             modifier = Modifier
                 .width(285.dp)
