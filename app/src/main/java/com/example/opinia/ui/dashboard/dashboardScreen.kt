@@ -94,8 +94,7 @@ fun DashboardContent(
                 CustomTopAppBar(
                     avatarResId = avatarResId,
                     onAvatarClick = onAvatarClick,
-                    text = "Welcome, $studentName $studentSurname",
-                    textSize = 17
+                    text = "Welcome, $studentName $studentSurname"
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))

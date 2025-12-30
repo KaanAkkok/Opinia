@@ -4,7 +4,6 @@ import android.app.Activity
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -247,8 +246,9 @@ fun CourseDetailContent(
                         Text(
                             "Your Review",
                             color = black,
-                            style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.SemiBold
+                            fontFamily = NunitoFontFamily,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 15.sp
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         CustomCommentCard(
@@ -266,8 +266,9 @@ fun CourseDetailContent(
                         Text(
                             "Student Reviews",
                             color = black,
-                            style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.SemiBold
+                            fontFamily = NunitoFontFamily,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 15.sp
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                     }

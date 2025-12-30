@@ -30,7 +30,7 @@ fun CustomButton(
     width: Int = 270,
     modifier: Modifier = Modifier,
     text: String,
-    fontSize: Int = 20
+    fontSize: Int = 17
 ) {
 
     Button(

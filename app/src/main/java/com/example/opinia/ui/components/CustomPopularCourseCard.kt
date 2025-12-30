@@ -87,7 +87,8 @@ fun CustomPopularCourseCard(
                     flingBehavior = PagerDefaults.flingBehavior(
                         state = pagerState,
                         snapAnimationSpec = spring(stiffness = Spring.StiffnessLow)
-                    )
+                    ),
+                    verticalAlignment = Alignment.Top
                 ) { pageIndex ->
                     val course = popularCourses[pageIndex]
 
@@ -96,31 +97,34 @@ fun CustomPopularCourseCard(
                             .fillMaxWidth()
                             .padding(horizontal = 24.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Row(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             // 1. Ders Başlığı
                             Column(
-                                modifier = Modifier.weight(1f).clickable(onClick = {
-                                    onCourseClick(course.Course.courseId)
-                                })
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clickable(onClick = {
+                                        onCourseClick(course.Course.courseId)
+                                    })
                             ) {
                                 Text(
                                     text = course.Course.courseCode,
                                     color = black,
                                     fontFamily = NunitoFontFamily,
-                                    fontWeight = FontWeight.SemiBold,
+                                    fontWeight = FontWeight.Bold,
                                     fontSize = 15.sp
                                 )
                                 Text(
                                     text = course.Course.courseName,
                                     color = black,
                                     fontFamily = NunitoFontFamily,
-                                    fontWeight = FontWeight.SemiBold,
+                                    fontWeight = FontWeight.Bold,
                                     fontSize = 15.sp
                                 )
                             }

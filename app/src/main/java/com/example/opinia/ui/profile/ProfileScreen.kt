@@ -197,7 +197,7 @@ fun ProfileContent(
                 onClick = onLogoutClicked,
                 text = "Log out",
                 shape = MaterialTheme.shapes.medium,
-                textStyle = MaterialTheme.typography.titleMedium.copy(fontSize = 18.sp),
+                textStyle = MaterialTheme.typography.titleMedium,
                 containerColor = OpinialightBlue,
                 contentColor = OpiniaDeepBlue,
                 modifier = Modifier
@@ -212,7 +212,6 @@ fun ProfileContent(
                 text = "Delete Account",
                 shape = MaterialTheme.shapes.medium,
                 textStyle = MaterialTheme.typography.titleMedium,
-                fontSize = 18,
                 containerColor = Color.Red.copy(alpha = 0.2f),
                 contentColor = OpiniaDeepBlue,
                 modifier = Modifier
