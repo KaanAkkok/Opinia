@@ -13,11 +13,18 @@ class CourseRepository @Inject constructor(private val firestore: FirebaseFirest
     private val collectionName = "courses"
     private val TAG = "CourseRepository"
 
+    private fun formatCourseCode(course: Course): Course {
+        val formattedCode = course.courseCode.replace(Regex("([a-zA-Z]+)(\\d+)"), "$1 $2")
+        return course.copy(courseCode = formattedCode)
+    }
+
     //tüm dersleri verir
     suspend fun getAllCourses(): Result<List<Course>> {
         return try {
-            val snapshot = firestore.collection(collectionName).get().await()
-            val courses = snapshot.toObjects(Course::class.java)
+            val documentSnapshot = firestore.collection(collectionName).get().await()
+            val courses = documentSnapshot.toObjects(Course::class.java).map {
+                formatCourseCode(it)
+            }
             val sortedCourses = courses.sortedBy { it.courseCode }
             Log.d(TAG, "All courses retrieved")
             Result.success(sortedCourses)
@@ -32,7 +39,9 @@ class CourseRepository @Inject constructor(private val firestore: FirebaseFirest
         return try {
             val documentSnapshot = firestore.collection(collectionName).document(courseId).get().await()
             if (documentSnapshot.exists()) {
-                val course = documentSnapshot.toObject(Course::class.java)
+                val course = documentSnapshot.toObject(Course::class.java)?.let {
+                    formatCourseCode(it)
+                }
                 Log.d(TAG, "Course retrieved successfully")
                 Result.success(course)
             } else {
@@ -52,8 +61,10 @@ class CourseRepository @Inject constructor(private val firestore: FirebaseFirest
             return Result.success(emptyList())
         }
         return try {
-            val snapshot = firestore.collection(collectionName).whereIn(FieldPath.documentId(), courseIds).get().await()
-            val courses = snapshot.toObjects(Course::class.java)
+            val documentSnapshot = firestore.collection(collectionName).whereIn(FieldPath.documentId(), courseIds).get().await()
+            val courses = documentSnapshot.toObjects(Course::class.java).map {
+                formatCourseCode(it)
+            }
             val sortedCourses = courses.sortedBy { it.courseCode }
             Log.d(TAG, "Courses retrieved successfully")
             Result.success(sortedCourses)
@@ -130,8 +141,10 @@ class CourseRepository @Inject constructor(private val firestore: FirebaseFirest
     //fakülteye bağlı dersleri çeker
     suspend fun getCoursesByFacultyId(facultyId: String): Result<List<Course>> {
         return try {
-            val snapshot = firestore.collection(collectionName).whereEqualTo("facultyId", facultyId).get().await()
-            val courses = snapshot.toObjects(Course::class.java)
+            val documentSnapshot = firestore.collection(collectionName).whereEqualTo("facultyId", facultyId).get().await()
+            val courses = documentSnapshot.toObjects(Course::class.java).map {
+                formatCourseCode(it)
+            }
             val sortedCourses = courses.sortedBy { it.courseCode }
             Log.d(TAG, "Courses retrieved successfully by faculty")
             Result.success(sortedCourses)
@@ -144,8 +157,10 @@ class CourseRepository @Inject constructor(private val firestore: FirebaseFirest
     //departmana bağlı dersleri çeker
     suspend fun getCoursesByDepartmentId(departmentId: String): Result<List<Course>> {
         return try {
-            val snapshot = firestore.collection(collectionName).whereArrayContains("departmentIds", departmentId).get().await()
-            val courses = snapshot.toObjects(Course::class.java)
+            val documentSnapshot = firestore.collection(collectionName).whereArrayContains("departmentIds", departmentId).get().await()
+            val courses = documentSnapshot.toObjects(Course::class.java).map {
+                formatCourseCode(it)
+            }
             val sortedCourses = courses.sortedBy { it.courseCode }
             Log.d(TAG, "Courses retrieved successfully by department")
             Result.success(sortedCourses)
@@ -158,8 +173,10 @@ class CourseRepository @Inject constructor(private val firestore: FirebaseFirest
     //hocaya bağlı dersleri çeker
     suspend fun getCoursesByInstructorId(instructorId: String): Result<List<Course>> {
         return try {
-            val snapshot = firestore.collection(collectionName).whereArrayContains("instructorIds", instructorId).get().await()
-            val courses = snapshot.toObjects(Course::class.java)
+            val documentSnapshot = firestore.collection(collectionName).whereArrayContains("instructorIds", instructorId).get().await()
+            val courses = documentSnapshot.toObjects(Course::class.java).map {
+                formatCourseCode(it)
+            }
             val sortedCourses = courses.sortedBy { it.courseCode }
             Log.d(TAG, "Courses retrieved successfully by department")
             Result.success(sortedCourses)
@@ -198,8 +215,10 @@ class CourseRepository @Inject constructor(private val firestore: FirebaseFirest
     //popüler dersleri verir
     suspend fun getPopularCourses(limit: Int = 10): Result<List<Course>> {
         return try {
-            val snapshot = firestore.collection(collectionName).orderBy("averageRating", Query.Direction.DESCENDING).limit(limit.toLong()).get().await()
-            val courses = snapshot.toObjects(Course::class.java)
+            val documentSnapshot = firestore.collection(collectionName).orderBy("averageRating", Query.Direction.DESCENDING).limit(limit.toLong()).get().await()
+            val courses = documentSnapshot.toObjects(Course::class.java).map {
+                formatCourseCode(it)
+            }
             Log.d(TAG, "Popular courses retrieved successfully")
             Result.success(courses)
         } catch (e: Exception) {
@@ -212,8 +231,10 @@ class CourseRepository @Inject constructor(private val firestore: FirebaseFirest
     suspend fun searchCourses(query: String): Result<List<Course>> {
         return try {
             val normalizedQuery = query.trim().lowercase()
-            val snapshot = firestore.collection(collectionName).orderBy("searchCode").startAt(normalizedQuery).endAt(normalizedQuery + "\uf8ff").get().await()
-            val courses = snapshot.toObjects(Course::class.java)
+            val documentSnapshot = firestore.collection(collectionName).orderBy("searchCode").startAt(normalizedQuery).endAt(normalizedQuery + "\uf8ff").get().await()
+            val courses = documentSnapshot.toObjects(Course::class.java).map {
+                formatCourseCode(it)
+            }
             Log.d(TAG, "Courses searched successfully")
             Result.success(courses)
         } catch (e: Exception) {

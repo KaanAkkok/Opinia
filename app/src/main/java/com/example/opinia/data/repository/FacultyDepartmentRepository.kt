@@ -103,8 +103,8 @@ class FacultyDepartmentRepository @Inject constructor(private val firestore: Fir
     //tüm fakülteleri verir
     suspend fun getAllFaculties(): Result<List<Faculty>> {
         return try {
-            val snapshot = firestore.collection(collectionFacultyName).get().await()
-            val faculties = snapshot.toObjects(Faculty::class.java)
+            val documentSnapshot = firestore.collection(collectionFacultyName).get().await()
+            val faculties = documentSnapshot.toObjects(Faculty::class.java)
             val sortedFaculties = faculties.sortedBy { it.facultyName }
             Log.d(TAG, "Faculties retrieved successfully")
             Result.success(sortedFaculties)
@@ -117,8 +117,8 @@ class FacultyDepartmentRepository @Inject constructor(private val firestore: Fir
     //tüm departmanları verir
     suspend fun getAllDepartments(): Result<List<Department>> {
         return try {
-            val snapshot = firestore.collection(collectionDepartmentName).get().await()
-            val departments = snapshot.toObjects(Department::class.java)
+            val documentSnapshot = firestore.collection(collectionDepartmentName).get().await()
+            val departments = documentSnapshot.toObjects(Department::class.java)
             val sortedDepartments = departments.sortedBy { it.departmentName }
             Log.d(TAG, "Departments retrieved successfully")
             Result.success(sortedDepartments)
@@ -132,8 +132,8 @@ class FacultyDepartmentRepository @Inject constructor(private val firestore: Fir
     //fakülteye bağlı departmanları verir
     suspend fun getDepartmentsByFaculty(facultyId: String): Result<List<Department>> {
         return try {
-            val snapshot = firestore.collection(collectionDepartmentName).whereEqualTo("facultyId", facultyId).get().await()
-            val departments = snapshot.toObjects(Department::class.java)
+            val documentSnapshot = firestore.collection(collectionDepartmentName).whereEqualTo("facultyId", facultyId).get().await()
+            val departments = documentSnapshot.toObjects(Department::class.java)
             val sortedDepartments = departments.sortedBy { it.departmentName }
             Log.d(TAG, "Departments retrieved successfully")
             Result.success(sortedDepartments)
@@ -151,8 +151,8 @@ class FacultyDepartmentRepository @Inject constructor(private val firestore: Fir
             return Result.success(emptyList())
         }
         return try {
-            val snapshot = firestore.collection(collectionDepartmentName).whereIn(FieldPath.documentId(), departmentIds).get().await() //maks 30 id
-            val departments = snapshot.toObjects(Department::class.java)
+            val documentSnapshot = firestore.collection(collectionDepartmentName).whereIn(FieldPath.documentId(), departmentIds).get().await() //maks 30 id
+            val departments = documentSnapshot.toObjects(Department::class.java)
             val sortedDepartments = departments.sortedBy { it.departmentName }
             Log.d(TAG, "Departments retrieved successfully")
             Result.success(sortedDepartments)

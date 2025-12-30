@@ -34,8 +34,8 @@ class InstructorRepository @Inject constructor(private val firestore: FirebaseFi
     // tüm hocaları verir
     suspend fun getAllInstructors(): Result<List<Instructor>> {
         return try {
-            val snapshot = firestore.collection(collectionName).get().await()
-            val instructors = snapshot.toObjects(Instructor::class.java)
+            val documentSnapshot = firestore.collection(collectionName).get().await()
+            val instructors = documentSnapshot.toObjects(Instructor::class.java)
             val sortedInstructor = instructors.sortedBy { it.instructorName }
             Log.d(TAG, "All instructors retrieved")
             Result.success(sortedInstructor)
@@ -154,8 +154,8 @@ class InstructorRepository @Inject constructor(private val firestore: FirebaseFi
     // fakülteye bağlı hocaları çeker
     suspend fun getInstructorsByFacultyId(facultyId: String): Result<List<Instructor>> {
         return try {
-            val snapshot = firestore.collection(collectionName).whereEqualTo("facultyId", facultyId).get().await()
-            val instructors = snapshot.toObjects(Instructor::class.java)
+            val documentSnapshot = firestore.collection(collectionName).whereEqualTo("facultyId", facultyId).get().await()
+            val instructors = documentSnapshot.toObjects(Instructor::class.java)
             val sortedInstructors = instructors.sortedBy { it.instructorName }
             Log.d(TAG, "Instructors retrieved successfully by faculty")
             Result.success(sortedInstructors)
@@ -172,8 +172,8 @@ class InstructorRepository @Inject constructor(private val firestore: FirebaseFi
             return Result.success(emptyList())
         }
         return try {
-            val snapshot = firestore.collection(collectionName).whereIn(FieldPath.documentId(), instructorIds).get().await() //maks 30 id
-            val instructors = snapshot.toObjects(Instructor::class.java)
+            val documentSnapshot = firestore.collection(collectionName).whereIn(FieldPath.documentId(), instructorIds).get().await() //maks 30 id
+            val instructors = documentSnapshot.toObjects(Instructor::class.java)
             val sortedInstructors = instructors.sortedBy { it.instructorName }
             Log.d(TAG, "Instructors retrieved by IDs")
             Result.success(sortedInstructors)
@@ -186,8 +186,8 @@ class InstructorRepository @Inject constructor(private val firestore: FirebaseFi
     // dersi veren hocaları çekmek için
     suspend fun getInstructorsByCourseId(courseId: String): Result<List<Instructor>> {
         return try {
-            val snapshot = firestore.collection(collectionName).whereArrayContains("givenCourseIds", courseId).get().await()
-            val instructors = snapshot.toObjects(Instructor::class.java)
+            val documentSnapshot = firestore.collection(collectionName).whereArrayContains("givenCourseIds", courseId).get().await()
+            val instructors = documentSnapshot.toObjects(Instructor::class.java)
             val sortedInstructors = instructors.sortedBy { it.instructorName }
             Log.d(TAG, "Instructors retrieved successfully by course")
             Result.success(sortedInstructors)
@@ -227,8 +227,8 @@ class InstructorRepository @Inject constructor(private val firestore: FirebaseFi
     suspend fun searchInstructors(query: String): Result<List<Instructor>> {
         return try {
             val normalizedQuery = query.trim().lowercase()
-            val snapshot = firestore.collection(collectionName).orderBy("searchName").startAt(normalizedQuery).endAt(normalizedQuery + "\uf8ff").get().await()
-            val instructors = snapshot.toObjects(Instructor::class.java)
+            val documentSnapshot = firestore.collection(collectionName).orderBy("searchName").startAt(normalizedQuery).endAt(normalizedQuery + "\uf8ff").get().await()
+            val instructors = documentSnapshot.toObjects(Instructor::class.java)
             Log.d(TAG, "Instructors searched successfully")
             Result.success(instructors)
         } catch (e: Exception) {

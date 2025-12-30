@@ -58,8 +58,8 @@ class CommentReviewRepository @Inject constructor(private val firestore: Firebas
     //derslerin yorumlarını çeker
     suspend fun getCommentsByCourseId(courseId: String): Result<List<CommentReview>> {
         return try {
-            val snapshot = firestore.collection(collectionName).whereEqualTo("courseId", courseId).get().await()
-            val comments = snapshot.toObjects(CommentReview::class.java)
+            val documentSnapshot = firestore.collection(collectionName).whereEqualTo("courseId", courseId).get().await()
+            val comments = documentSnapshot.toObjects(CommentReview::class.java)
             val sortedComments = comments.sortedByDescending { it.timestamp }
             Log.d(TAG, "Comments retrieved and sorted successfully")
             Result.success(sortedComments)
@@ -72,8 +72,8 @@ class CommentReviewRepository @Inject constructor(private val firestore: Firebas
     //öğrencinin yaptığı yorumları çeker
     suspend fun getCommentsByStudentId(studentId: String): Result<List<CommentReview>> {
         return try {
-            val snapshot = firestore.collection(collectionName).whereEqualTo("studentId", studentId).get().await()
-            val comments = snapshot.toObjects(CommentReview::class.java)
+            val documentSnapshot = firestore.collection(collectionName).whereEqualTo("studentId", studentId).get().await()
+            val comments = documentSnapshot.toObjects(CommentReview::class.java)
             val sortedComments = comments.sortedByDescending { it.timestamp }
             Log.d(TAG, "Comments retrieved and sorted successfully")
             Result.success(sortedComments)
@@ -86,13 +86,13 @@ class CommentReviewRepository @Inject constructor(private val firestore: Firebas
     //bir dersin en güncel yorumunu verir
     suspend fun getLatestCommentsByCourseId(courseId: String, limit: Int = 1): Result<List<CommentReview>> {
         return try {
-            val snapshot = firestore.collection(collectionName).whereEqualTo("courseId", courseId).orderBy("timestamp", Query.Direction.DESCENDING).limit(limit.toLong()).get().await()
-            if (snapshot.isEmpty) {
+            val documentSnapshot = firestore.collection(collectionName).whereEqualTo("courseId", courseId).orderBy("timestamp", Query.Direction.DESCENDING).limit(limit.toLong()).get().await()
+            if (documentSnapshot.isEmpty) {
                 Log.d(TAG, "No comments found for the course")
                 return Result.success(emptyList())
             }
             else {
-                val comments = snapshot.toObjects(CommentReview::class.java)
+                val comments = documentSnapshot.toObjects(CommentReview::class.java)
                 Log.d(TAG, "Latest comments retrieved successfully")
                 Result.success(comments)
             }
