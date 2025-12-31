@@ -64,9 +64,10 @@ fun CustomCommentCard(
     var showDeleteDialog by remember { mutableStateOf(false) }
 
     if (showDeleteDialog) {
-        DeleteCommentDialog(
+        AreYouSureDialog(
             onDismiss = { showDeleteDialog = false },
-            onConfirm = onDeleteClick
+            onConfirm = onDeleteClick,
+            infoText = "comment"
         )
     }
 

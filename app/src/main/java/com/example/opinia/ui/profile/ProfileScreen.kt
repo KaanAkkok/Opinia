@@ -35,12 +35,12 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavController
 import com.example.opinia.R
 import com.example.opinia.ui.Destination
 import com.example.opinia.ui.component.BottomNavBar
+import com.example.opinia.ui.components.AreYouSureDialog
 import com.example.opinia.ui.components.CustomButton
 import com.example.opinia.ui.components.DeleteAccountDialog
 import com.example.opinia.ui.theme.OpiniaDeepBlue
@@ -90,6 +90,9 @@ fun ProfileContent(
     ) { innerPadding ->
         val scrollState = rememberScrollState()
         var showDeleteDialog by remember { mutableStateOf(false) }
+        var showAreYouSureDialog by remember { mutableStateOf(false) }
+        var storedPassword by remember { mutableStateOf("") }
+
         Column(
             modifier = Modifier
                 .padding(innerPadding)
@@ -225,9 +228,21 @@ fun ProfileContent(
                 DeleteAccountDialog(
                     onDismiss = { showDeleteDialog = false },
                     onConfirm = { password ->
+                        storedPassword = password
                         showDeleteDialog = false
-                        onDeleteClicked(password)
+                        showAreYouSureDialog = true
                     }
+                )
+            }
+
+            if (showAreYouSureDialog) {
+                AreYouSureDialog(
+                    onDismiss = { showAreYouSureDialog = false },
+                    onConfirm = {
+                        showAreYouSureDialog = false
+                        onDeleteClicked(storedPassword)
+                    },
+                    infoText = "account"
                 )
             }
         }
