@@ -47,12 +47,10 @@ import com.example.opinia.data.model.Course
 import com.example.opinia.ui.Destination
 import com.example.opinia.ui.component.BottomNavBar
 import com.example.opinia.ui.components.CustomTopAppBar
-import com.example.opinia.ui.components.SearchBar
 import com.example.opinia.ui.search.GeneralSearchBar
 import com.example.opinia.ui.search.SearchViewModel
 import com.example.opinia.ui.theme.NunitoFontFamily
 import com.example.opinia.ui.theme.OpiniaGreyWhite
-import com.example.opinia.ui.theme.OpiniaPurple
 import com.example.opinia.ui.theme.OpinialightBlue
 import com.example.opinia.ui.theme.WorkSansFontFamily
 import com.example.opinia.ui.theme.black

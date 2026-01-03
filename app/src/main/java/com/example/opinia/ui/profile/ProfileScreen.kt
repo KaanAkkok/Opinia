@@ -212,7 +212,7 @@ fun ProfileContent(
 
             CustomButton(
                 onClick = { showDeleteDialog = true },
-                text = "Delete Account",
+                text = "Delete",
                 shape = MaterialTheme.shapes.medium,
                 textStyle = MaterialTheme.typography.titleMedium,
                 containerColor = Color.Red.copy(alpha = 0.2f),

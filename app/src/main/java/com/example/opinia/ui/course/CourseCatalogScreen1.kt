@@ -45,7 +45,6 @@ import com.example.opinia.ui.Destination
 import com.example.opinia.ui.component.BottomNavBar
 import com.example.opinia.ui.components.CustomDropdown
 import com.example.opinia.ui.components.CustomTopAppBar
-import com.example.opinia.ui.components.SearchBar
 import com.example.opinia.ui.search.GeneralSearchBar
 import com.example.opinia.ui.search.SearchViewModel
 import com.example.opinia.ui.theme.NunitoFontFamily
