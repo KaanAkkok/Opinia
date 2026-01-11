@@ -93,7 +93,9 @@ fun InstructorListContent(
                 ) {
                     GeneralSearchBar(
                         searchViewModel = searchViewModel,
-                        onNavigateToCourse = { }, // Burası boş kalabilir
+                        onNavigateToCourse = { courseId ->
+                            navController.navigate(Destination.COURSE_DETAIL.route.replace("{courseId}", courseId))
+                        }, // Burası boş kalabilir
                         onNavigateToInstructor = { instructor ->
                             // Arama sonucuna tıklayınca o hocaya gitme mantığı
                             val deptId = instructor.departmentIds.firstOrNull() ?: "unknown"
