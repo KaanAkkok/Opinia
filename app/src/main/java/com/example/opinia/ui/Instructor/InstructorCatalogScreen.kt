@@ -87,7 +87,9 @@ fun InstructorCatalogContent(
                 ) {
                     GeneralSearchBar(
                         searchViewModel = searchViewModel,
-                        onNavigateToCourse = { },
+                        onNavigateToCourse = { courseId ->
+                            navController.navigate(Destination.COURSE_DETAIL.route.replace("{courseId}", courseId))
+                        },
                         onNavigateToInstructor = { instructor ->
                             val deptId = instructor.departmentIds.firstOrNull() ?: "unknown"
                             val route = Destination.INSTRUCTOR_LIST.route
