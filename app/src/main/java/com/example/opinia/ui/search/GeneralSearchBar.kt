@@ -239,8 +239,15 @@ fun GeneralSearchBarContent(
                                     fontSize = 15.sp,
                                     color = black
                                 )
-
                             }
+
+                            HorizontalDivider(
+                                thickness = 1.dp,
+                                color = Color(0XFFF5F5F5),
+                                modifier = Modifier
+                                    .padding(horizontal = 12.dp)
+                                    .fillMaxWidth()
+                            )
                         }
                     }
 
